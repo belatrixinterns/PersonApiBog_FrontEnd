@@ -41,46 +41,41 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormStatus> {
     
     render(){
         return(
-            <div className="home">
-                <form onSubmit={this.handleSubmit}>
-                    <Form.Field>
-                        <Label>
-                            Name:<Input type="text" value={this.state.name} onChange={this.handleChange} />
+            <div className="person_form_container">
+                <form className="person_form" onSubmit={this.handleSubmit}>
+                    <Form.Field className="form_field">
+                        <Label className="label_field">Name:</Label>
+                        <Input className="input-form" type="text" value={this.state.name} onChange={this.handleChange} />
+                    </Form.Field>
+                    <Form.Field className="form_field">
+                        <Label className="label_field">Last Name:</Label>
+                        <Input className="input-form" type="text" value={this.state.name} onChange={this.handleChange} />
+                    </Form.Field>
+                    <Form.Field className="form_field">
+                        <Label className="label_field">Document Type:</Label>
+                        <Select className="input-form" options={this.state.documentTypeList} type="text" value={this.state.name} onChange={this.handleChange} />
+                    </Form.Field>
+                    <Form.Field className="form_field">
+                        <Label className="label_field">Document:</Label>
+                        <Input className="input-form" type="text" value={this.state.name} onChange={this.handleChange} />
+                    </Form.Field>
+                    <Form.Field className="form_field">
+                        <Label className="label_field">Date of Bith:</Label>
+                        <Label className="label_date ">
+                        <DateInput className="date-form" name="date"
+                            placeholder="Date of Bith"
+                            iconPosition="right"
+                            onChange={this.handleChange} 
+                            value={this.state.dateOfBirth} />
                         </Label>
                     </Form.Field>
-                    <Form.Field>
-                        <Label>
-                            Last Name:<Input type="text" value={this.state.name} onChange={this.handleChange} />
-                        </Label>
+                    <Form.Field className="form_field">
+                        <Label className="label_field">Gender:</Label>
+                        <Select className="input-form" options={this.state.genderList} type="text" value={this.state.name} onChange={this.handleChange} />
                     </Form.Field>
-                    <Form.Field>
-                        <Label>
-                            Document Type: <Select options={this.state.documentTypeList} type="text" value={this.state.name} onChange={this.handleChange} />
-                        </Label>
-                    </Form.Field>
-                    <Form.Field>
-                        <Label>
-                            Document:<Input type="text" value={this.state.name} onChange={this.handleChange} />
-                        </Label>
-                    </Form.Field>
-                    <Form.Field>
-                        <Label>
-                            Date of Bith:<DateInput name="date"
-                                    placeholder="Date"
-                                    iconPosition="left"
-                                    onChange={this.handleChange} 
-                                    value={this.state.dateOfBirth} />
-                        </Label>
-                    </Form.Field>
-                    <Form.Field>
-                        <Label>
-                            Gender: <Select options={this.state.genderList} type="text" value={this.state.name} onChange={this.handleChange} />
-                        </Label>
-                    </Form.Field>
-                    <Form.Field>
-                        <Label>
-                            Nationality: <Select options={this.state.nationalityList} type="text" value={this.state.name} onChange={this.handleChange} />
-                        </Label>
+                    <Form.Field className="form_field">
+                        <Label className="label_field">Nationality: </Label>
+                        <Select className="input-form" options={this.state.nationalityList} type="text" value={this.state.name} onChange={this.handleChange} />
                     </Form.Field>
                     <Input type="submit" value="Add" />
                 </form>
