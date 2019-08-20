@@ -1,10 +1,11 @@
 .Body {
     min-height: 95%;
+    color: $secondary;
   }
   
   .Footer {
     position: absolute;
-    background-color: #282c34;
+    background-color: $background-hf;
     min-width: 100%;
     min-height: 10%; 
     bottom: 0;
@@ -18,10 +19,9 @@
   
   .App-header {
     padding: 5px;
-    background-color: #282c34;
+    background-color: $background-hf;
   }
-  
-  .App-link {
-    color: #61dafb;
+
+  .submit_button{
+    width: 200px;
   }
-  

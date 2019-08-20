@@ -1,8 +1,9 @@
 // Base
-@import "./base/base.css";
+@import "./variables/variables.scss";
+@import "./base/base.scss";
 
 // Components
-@import "./components/personForm.css";
+@import "./components/personForm.scss";
 
 // Pages / Containers
 
