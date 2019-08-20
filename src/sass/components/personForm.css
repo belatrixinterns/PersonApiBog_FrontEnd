@@ -1,0 +1,29 @@
+.input-form{
+    min-width: 80%;
+    
+}
+.input-form .input{
+    min-width: 80%;
+    white-space: nowrap;
+}
+.input-form .div{
+    min-width: 100%;
+}
+.form_field{
+    margin: 10px;
+}
+.person_form_container{
+    padding: 1.5em;
+    display: block;
+    margin: auto;
+}
+.label_field{
+    min-width: 15%;
+    background-color: white!important;
+}
+.label_date{
+    min-width: 80%;
+    background-color: white!important;
+    margin: 0px!important;
+    padding: 0px!important;
+}
