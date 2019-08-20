@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import ListPersonPage from '../../container/ListPerson/ListPersonPage';
 import logo from '../../assets/images/logo-belatrix.png';
+import CreatePerson from '../../containers/CreatePerson/CreatePerson';
 
 const App: React.FC = () => {
   return (
