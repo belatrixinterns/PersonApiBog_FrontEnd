@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import PersonForm from '../../component/PersonForm/PersonForm'
 
-class CreatePerson extends React.Component {
+type PageFormProps = {
+}
+
+class CreatePerson extends React.Component<PageFormProps> {
     constructor(props: any){
         super(props);        
         

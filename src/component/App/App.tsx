@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import logo from '../../assets/images/logo-belatrix.png';
+import CreatePerson from '../../containers/CreatePerson/CreatePerson';
 
 const App: React.FC = () => {
   return (
@@ -9,7 +10,7 @@ const App: React.FC = () => {
         <img src={logo} className="App-logo" alt="logo" />
       </header>
       <div className="Body">
-        
+        <CreatePerson/>
       </div>
       <div className="Footer">
         
