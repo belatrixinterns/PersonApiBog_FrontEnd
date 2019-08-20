@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Input, Select, Form, Label} from 'semantic-ui-react';
+import {Input, Select, Form, Label, Table, Button} from 'semantic-ui-react';
 import {DateInput} from 'semantic-ui-calendar-react';
 
 type PersonFormProps = {
@@ -43,41 +43,52 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormStatus> {
         return(
             <div className="person_form_container">
                 <form className="person_form" onSubmit={this.handleSubmit}>
-                    <Form.Field className="form_field">
-                        <Label className="label_field">Name:</Label>
-                        <Input className="input-form" type="text" value={this.state.name} onChange={this.handleChange} />
-                    </Form.Field>
-                    <Form.Field className="form_field">
-                        <Label className="label_field">Last Name:</Label>
-                        <Input className="input-form" type="text" value={this.state.name} onChange={this.handleChange} />
-                    </Form.Field>
-                    <Form.Field className="form_field">
-                        <Label className="label_field">Document Type:</Label>
-                        <Select className="input-form" options={this.state.documentTypeList} type="text" value={this.state.name} onChange={this.handleChange} />
-                    </Form.Field>
-                    <Form.Field className="form_field">
-                        <Label className="label_field">Document:</Label>
-                        <Input className="input-form" type="text" value={this.state.name} onChange={this.handleChange} />
-                    </Form.Field>
-                    <Form.Field className="form_field">
-                        <Label className="label_field">Date of Bith:</Label>
-                        <Label className="label_date ">
-                        <DateInput className="date-form" name="date"
-                            placeholder="Date of Bith"
-                            iconPosition="right"
-                            onChange={this.handleChange} 
-                            value={this.state.dateOfBirth} />
-                        </Label>
-                    </Form.Field>
-                    <Form.Field className="form_field">
-                        <Label className="label_field">Gender:</Label>
-                        <Select className="input-form" options={this.state.genderList} type="text" value={this.state.name} onChange={this.handleChange} />
-                    </Form.Field>
-                    <Form.Field className="form_field">
-                        <Label className="label_field">Nationality: </Label>
-                        <Select className="input-form" options={this.state.nationalityList} type="text" value={this.state.name} onChange={this.handleChange} />
-                    </Form.Field>
-                    <Input type="submit" value="Add" />
+                    <h2>Add Person</h2>
+                    <Table basic='very'>
+                        <Table.Body>
+                            <Table.Row>
+                                <Table.Cell width={2}> Name:</Table.Cell>
+                                <Table.Cell width={10}> <Input fluid className="input-form" type="text" value={this.state.name} onChange={this.handleChange} /></Table.Cell>
+                            </Table.Row>
+                            
+                            <Table.Row>
+                                <Table.Cell width={2}>Last Name:</Table.Cell>
+                                <Table.Cell width={10}> <Input fluid className="input-form" type="text" value={this.state.name} onChange={this.handleChange} /></Table.Cell>
+                            </Table.Row>
+                            
+                            <Table.Row>
+                                <Table.Cell width={2}>Document Type:</Table.Cell>
+                                <Table.Cell width={10}><Select fluid className="input-form" options={this.state.documentTypeList} type="text" value={this.state.name} onChange={this.handleChange} /></Table.Cell>
+                            </Table.Row>
+                            
+                            <Table.Row>
+                                <Table.Cell width={2}>Document:</Table.Cell>
+                                <Table.Cell width={10}><Input fluid className="input-form" type="text" value={this.state.name} onChange={this.handleChange} /></Table.Cell>
+                            </Table.Row>
+                            
+                            <Table.Row>
+                                <Table.Cell width={2}>Date of Birth:</Table.Cell>
+                                <Table.Cell width={10}><DateInput fluid className="date-form" name="date"
+                                    placeholder="Date of Birth"
+                                    iconPosition="right"
+                                    onChange={this.handleChange} 
+                                    value={this.state.dateOfBirth} />
+                                </Table.Cell>
+                            </Table.Row>
+                            
+                            <Table.Row>
+                                <Table.Cell width={2}>Gender:</Table.Cell>
+                                <Table.Cell width={10}><Select fluid className="input-form" options={this.state.genderList} type="text" value={this.state.name} onChange={this.handleChange} /></Table.Cell>
+                            </Table.Row>
+
+                            <Table.Row>
+                                <Table.Cell width={2}>Nationality:</Table.Cell>
+                                <Table.Cell width={10}><Select fluid className="input-form" options={this.state.nationalityList} type="text" value={this.state.name} onChange={this.handleChange} /></Table.Cell>
+                            </Table.Row>
+                            
+                        </Table.Body>
+                    </Table>
+                    <Button className="submit_button" basic floated='right' type="submit" content="Add" />
                 </form>
             </div>
         );
