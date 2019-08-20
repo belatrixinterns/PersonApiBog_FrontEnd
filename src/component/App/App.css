@@ -1,10 +1,8 @@
 .Body {
-  background-color: lightgray;
   min-height: 95%;
 }
 
 .Footer {
-  position: absolute;
   background-color: #282c34;
   min-width: 100%;
   min-height: 10%; 
