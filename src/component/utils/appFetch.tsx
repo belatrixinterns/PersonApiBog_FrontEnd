@@ -4,9 +4,7 @@ export const appFetch = (options: IAppFetchOptions) =>
   fetch(options.url, {
     headers: {
       "Accept": 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: "true"
-      
+      'Content-Type': 'application/json'
     },
     body: options.body,
     method: options.method

@@ -4,7 +4,7 @@ import PersonForm from '../../component/PersonForm/PersonForm'
 type PageFormProps = {
 }
 
-class CreatePerson extends React.Component<PageFormProps> {
+class PersonFormPage extends React.Component<PageFormProps> {
     constructor(props: any){
         super(props);        
         
@@ -21,4 +21,4 @@ class CreatePerson extends React.Component<PageFormProps> {
     }
 }
 
-export default CreatePerson;
+export default PersonFormPage;
