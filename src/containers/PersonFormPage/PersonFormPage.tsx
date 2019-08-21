@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PersonForm from '../../component/PersonForm/PersonForm'
 
 type PageFormProps = {
