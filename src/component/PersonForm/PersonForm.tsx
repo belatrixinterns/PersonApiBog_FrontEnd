@@ -2,13 +2,14 @@ import React from 'react';
 import {Input, Select, Table, Button} from 'semantic-ui-react';
 import {DateInput} from 'semantic-ui-calendar-react';
 import { appFetch } from '../utils/appFetch';
+import axios from 'axios';
 
 type PersonFormProps = {
     findAllItems: any
 }
 type PersonFormStatus = {
     name: any,
-    lantName: any,
+    lastName: any,
     documentType: any,
     document: any,
     dateOfBirth: any,
@@ -29,16 +30,10 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormStatus> {
             return {"text": value.name, "value": value.numericCode, "key": value.numericCode}
          }))}));
     }
-    create = () => {
-        const call = appFetch({url: "http://localhost:8080/person/", body: '{"name": "andres", "last_name": "arias", "date_of_birth": "1998-06-06", "document_type": "CC", "document_id": "12343123", "gender": "1", "nationality": "057"}', method: "POST"})
-        .then((request => JSON.stringify(request)));
-        console.log("request", call);
-   
-    }
-
+    
     constructor(props: PersonFormProps){
         super(props);
-        this.state = {request: {},name: '',lantName: '',documentType: '',document: '', dateOfBirth: "",gender: '',nationality: '',
+        this.state = {request: {},name: '',lastName: '',documentType: '',document: '', dateOfBirth: "",gender: '',nationality: '',
                         genderList: [{key:'0', value:'0', text:'Female'}, {key:'1', value:'1', text:'Male'}],nationalityList: [{}],documentTypeList: [{key:'1', value:'CC', text:'Citizenship Card'}, {key:'2', value:'CE', text:'Foreign Card'}, {key:'3', value:'TI', text:'Identity Card'}]};
 
         this.handleNameChange = this.handleNameChange.bind(this);
@@ -50,8 +45,6 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormStatus> {
         this.handleNationalityChange = this.handleNationalityChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.chargeCountries();
-
-        this.create();
     }
 
 
@@ -59,7 +52,7 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormStatus> {
         this.setState({name: event.target.value});
     }
     handleLastNameChange = (event:any) =>{
-        this.setState({lantName: event.target.value});
+        this.setState({lastName: event.target.value});
     }
     handleDocumentTypeChange = (event:any, {name, value}:any) => {
         this.setState({documentType: value});
@@ -78,12 +71,25 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormStatus> {
     }
 
     handleSubmit(event:any){
-        alert('A name was submitted: ' + this.state.name);
         event.preventDefault();
-    }
-    
-    onAddClick = (event: any) => {
+        try {
+            var splitDate = this.state.dateOfBirth.split("-");
+            var formatDate = splitDate[2]+"-"+splitDate[1]+"-"+splitDate[0];
+            const newPerson = '{"name":"' + this.state.name + '", "last_name":"'  + this.state.lastName + '","date_of_birth":"'+ formatDate + '","document_type":"'+
+                this.state.documentType + '","document_id":"'+ this.state.document +'","gender":"'+ this.state.gender+ '","nationality":"'+ this.state.nationality+ '"}';
+            axios.post(`http://localhost:8080/person/`, { newPerson })
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            }).catch( err => {
+                if(err.response.data.message)
+                    alert(err.response.data.message);
+            });
+            
+        } catch (error) {
+            alert(error);
 
+        }
     }
 
     render(){
@@ -100,7 +106,7 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormStatus> {
                             
                             <Table.Row>
                                 <Table.Cell width={2}>Last Name:</Table.Cell>
-                                <Table.Cell width={10}> <Input id="lantName" fluid placeholder='Last Name' className="input-form" type="text" value={this.state.lantName} onChange={this.handleLastNameChange} /></Table.Cell>
+                                <Table.Cell width={10}> <Input id="lantName" fluid placeholder='Last Name' className="input-form" type="text" value={this.state.lastName} onChange={this.handleLastNameChange} /></Table.Cell>
                             </Table.Row>
                             
                             <Table.Row>
@@ -143,7 +149,7 @@ class PersonForm extends React.Component<PersonFormProps, PersonFormStatus> {
                             
                         </Table.Body>
                     </Table>
-                    <Button className="submit_button" basic floated='right' type="submit" content="Add" onClick={this.onAddClick}/>
+                    <Button className="submit_button" basic floated='right' type="submit" content="Add" />
                 </form>
             </div>
         );
