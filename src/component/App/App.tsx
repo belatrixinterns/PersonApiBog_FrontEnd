@@ -1,9 +1,8 @@
 import React from 'react';
-import './App.css';
 import ListPersonPage from '../../container/ListPerson/ListPersonPage';
 import '../../sass/App.scss';
 import logo from '../../assets/images/logo-belatrix.png';
-import PersonFormPage from '../../containers/PersonFormPage/PersonFormPage';
+import PersonFormPage from '../../container/PersonFormPage/PersonFormPage';
 
 const App: React.FC = () => {
   return (
