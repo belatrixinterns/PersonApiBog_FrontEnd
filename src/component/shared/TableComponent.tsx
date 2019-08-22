@@ -4,6 +4,7 @@ import { ITableProps } from "../../interfaces/ITableProps";
 import "../../assets/TableComponent.css"
 import SearchComponent from './SearchComponent';
 import { Grid, Button, GridRow } from "semantic-ui-react";
+import { Link } from "react-router-dom";
 
 
 class TableComponent extends React.Component<ITableProps> {
@@ -46,6 +47,8 @@ class TableComponent extends React.Component<ITableProps> {
         } else this.setState({ filteredObject: changed });
     }
 
+   
+
     public render() {
         return <div className="table-margin">
             <ReactTable
@@ -81,13 +84,9 @@ class TableComponent extends React.Component<ITableProps> {
                                         <SearchComponent data={state} searchPlaceHolder={this.props.searchPlaceHolder} handleFilter={this.onKeyInputEnter} />
                                     </Grid.Column>
                                     <Grid.Column width={6}>
-                                        <Button
-                                            color="green"
-                                            content={this.props.buttonContent}
-                                            icon="add"
-                                            labelPosition="left"
-                                        >
-                                        </Button>
+                                        <Link to="/person/create">
+                                            {this.props.button}
+                                        </Link>
                                     </Grid.Column>
                                 </Grid.Row>
                             </Grid>

@@ -5,6 +5,7 @@ import { Column } from "react-table";
 import { IListPersonProps } from "../../interfaces/IListPersonProps";
 import { Button } from "semantic-ui-react";
 import matchSorter from 'match-sorter';
+import createPersonButton from "../shared/CreatePersonButton";
 
 const ListPersonComponent: React.FC<IListPersonProps> = (props) => {
 
@@ -104,6 +105,7 @@ const ListPersonComponent: React.FC<IListPersonProps> = (props) => {
   }
 
 
+
   return (
     <TableComponent
       columns={columns}
@@ -111,7 +113,7 @@ const ListPersonComponent: React.FC<IListPersonProps> = (props) => {
       loading={props.loading}
       columnsAccessor={columnsAccessor}
       searchPlaceHolder="Search person..."
-      buttonContent="Create person">
+      button={createPersonButton}>
     </TableComponent>)
 }
 
