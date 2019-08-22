@@ -1,84 +1,101 @@
 import React from "react";
-import ReactTable from "react-table";
+import ReactTable, { Filter } from "react-table";
 import { ITableProps } from "../../interfaces/ITableProps";
-import { Input, Form, Grid, Button, Icon } from 'semantic-ui-react'
 import "../../assets/TableComponent.css"
+import SearchComponent from './SearchComponent';
+import { Grid, Button, GridRow } from "semantic-ui-react";
 
-interface IFilteredProps {
-    id: String,
-    value: String
-}
 
 class TableComponent extends React.Component<ITableProps> {
 
-   state = {
-        filteredPeople: Array<IFilteredProps>(),
-        filterDocumentType: "NOT_SEARCHED"
+    state = {
+        filteredObject: Array<any>(),
+        filterValue: ""
     }
 
-    constructor(props: ITableProps){
+    constructor(props: ITableProps) {
         super(props);
     }
-
-    onFilteredChange(filtered: any) {
-     
-        if (filtered.length > 1 && this.state.filterDocumentType === "") {
-
-          const filterDocumentType = "NOT_SEARCHED";
-          this.setState( () => ({
-            filteredPeople: filteredPeople.filter(item:  => item.id != "all"),
-            filterDocumentType
-          }));
-        } else this.setState({ filteredPeople });
-      }
-
-
-    
-    filter = (event: any) => {
-       const {filteredValue} = event.target;
-       const filtered = [{id: "", value: filteredValue}];
-       this.setState({
-           filteredPeople: filtered,
-           filterDocumentType: filteredValue
-       })
+    onKeyInputEnter = (filtered: string) => {
+        let filters: Array<Filter> = this.props.columnsAccessor.map(currentColumn => ({ id: currentColumn, value: filtered }))
+        if (filtered.length > 0) {
+            if (filtered.length > 1) {
+                let filterObject = this.state.filteredObject.map(filter => {
+                    let filterAct = filters.find(fil => fil.id == filter.id);
+                    if (filterAct) {
+                        filter.value = filterAct.value;
+                        return filter;
+                    }
+                })
+                this.setState({ filteredObject: filterObject })
+            } else {
+                this.setState((prev: any) => ({ filteredObject: prev.filteredObject.concat(filters) }))
+            }
+        } else {
+            this.setState({ filteredObject: this.state.filteredObject.filter(filter => !filters.find(filActual => filActual.id == filter.id)) })
+        }
     }
 
-    onFilterChange(filtered: any){
-
+    onFilterChange = (changed: any) => {
+        if (this.state.filteredObject.length > 1 && this.state.filterValue.length) {
+            const filterAll = "";
+            this.setState({
+                filteredObject: changed.filter((item: any) => item.id != "all"),
+                filterValue: filterAll
+            });
+        } else this.setState({ filteredObject: changed });
     }
 
     public render() {
         return <div className="table-margin">
-            <Grid >
-                <Grid.Row>
-                    <Grid.Column width={10}>
-                        <Form>
-                            <Form.Field>
-                                <Input icon='users' iconPosition='left' className="search-input" placeholder='Search person...' onChange={ this.filter}/>
-                            </Form.Field>
-                        </Form>
-                    </Grid.Column>
-                    <Grid.Column width={6}>
-                        <Button
-                            color="green"
-                            content="New person"
-                            icon="add"
-                            labelPosition="left"
-                        >   
-                        </Button>
-                    </Grid.Column>
-                </Grid.Row>
-            </Grid>
             <ReactTable
+                getTheadFilterProps={() => {
+                    return {
+                        style:
+                            { display: "none" }
+                    };
+                }}
+                getTheadFilterThProps={() => {
+                    return {
+                        className:
+                            "hiddenFilter"
+
+                    };
+                }}
                 noDataText=""
                 loading={this.props.loading}
                 data={this.props.data}
                 columns={this.props.columns}
-                filterable={true}
-                defaultPageSize={10}
-                pageSizeOptions={[5, 10, 20]} />
+                filterable={false}
+                filtered={this.state.filteredObject}
+                onFilteredChange={this.onFilterChange}
+                defaultPageSize={5}
+                pageSizeOptions={[5, 10, 20]}
+            >
+                {(state, makeTable) => {
+                    return (
+                        <div>
+                            <Grid>
+                                <Grid.Row>
+                                    <Grid.Column width={10}>
+                                        <SearchComponent data={state} searchPlaceHolder={this.props.searchPlaceHolder} handleFilter={this.onKeyInputEnter} />
+                                    </Grid.Column>
+                                    <Grid.Column width={6}>
+                                        <Button
+                                            color="green"
+                                            content={this.props.buttonContent}
+                                            icon="add"
+                                            labelPosition="left"
+                                        >
+                                        </Button>
+                                    </Grid.Column>
+                                </Grid.Row>
+                            </Grid>
+                            {makeTable()}
+                        </div>);
+                }}
+            </ReactTable>
         </div>;
     }
 }
-
 export default TableComponent;

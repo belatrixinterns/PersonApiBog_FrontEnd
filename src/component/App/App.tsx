@@ -3,7 +3,6 @@ import './App.css';
 import Logo from '../../assets/images/logo-belatrix.png';
 import ListPersonPage from '../../container/ListPerson/ListPersonPage';
 
-
 const App: React.FC = () => {
   return (
     <div className="App">
@@ -13,11 +12,10 @@ const App: React.FC = () => {
       <div className="Body">
         <ListPersonPage></ListPersonPage>
       </div>
-      <div className="Footer">
-        
+      <div
+        className="Footer">
       </div>
     </div>
   );
 }
-
 export default App;
