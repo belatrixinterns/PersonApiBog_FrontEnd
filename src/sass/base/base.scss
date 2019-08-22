@@ -1,0 +1,27 @@
+.Body {
+    min-height: 95%;
+    color: $secondary;
+  }
+  
+  .Footer {
+    position: absolute;
+    background-color: $background-hf;
+    min-width: 100%;
+    min-height: 10%; 
+    bottom: 0;
+  }
+  
+  .App-logo {
+    height: 3em;
+    pointer-events: none;
+    padding: 10px 5em;
+  }
+  
+  .App-header {
+    padding: 5px;
+    background-color: $background-hf;
+  }
+
+  .submit_button{
+    width: 200px;
+  }
