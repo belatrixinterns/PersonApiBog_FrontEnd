@@ -3,8 +3,9 @@ import {Input, Select, Table, Button} from 'semantic-ui-react';
 import {DateInput} from 'semantic-ui-calendar-react';
 import axios from 'axios';
 
+
 type PersonFormProps = {
-    findAllItems: any
+    type: string,
 }
 type PersonFormStatus = {
     name: string,
@@ -14,18 +15,29 @@ type PersonFormStatus = {
     dateOfBirth: string,
     gender: string,
     nationality: string,
+    contact: string,
     genderList: Object[],
     nationalityList: Object[],
     documentTypeList: Object[],
     request: Object,
 }
 
-const PersonForm: FunctionComponent<PersonFormProps> = () => {
+const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
     
-    const [localState, setLocalState] = useState({request: {},name: '',lastName: '',documentType: '',document: '', dateOfBirth: "",gender: '',nationality: '',
+    const [localState, setLocalState] = useState({request: {},name: '',lastName: '',documentType: '',document: '', dateOfBirth: "",gender: '',nationality: '',contact: '',
     genderList: [{key:'0', value:'0', text:'Female'}, {key:'1', value:'1', text:'Male'}],nationalityList: [{}],
     documentTypeList: [{key:'1', value:'CC', text:'Citizenship Card'}, {key:'2', value:'CE', text:'Foreign Card'}, {key:'3', value:'TI', text:'Identity Card'}]});
 
+    const formCreateContent = [
+        {name: "Name:", input: <Input id="name" fluid required placeholder='Name' className="input-form" type="text" value={localState.name} onChange={handleNameChange} />},
+        {name: "Last Name:", input: <Input id="lantName" fluid required placeholder='Last Name' className="input-form" type="text" value={localState.lastName} onChange={handleLastNameChange} />},
+        {name: "Document Type:", input:<Select fluid required id="documentType" placeholder='Document Type' className="input-form" options={localState.documentTypeList} type="text" value={localState.documentType} onChange={handleDocumentTypeChange} />},
+        {name: "Document:", input:<Input id="document" fluid placeholder='Document' className="input-form" type="text" value={localState.document} onChange={handleDocumentChange} />},
+        {name: "Date of Birth:", input: datePicker()},
+        {name: "Gender:", input: <Select id="gender" fluid placeholder='Gender' className="input-form" options={localState.genderList} type="text" value={localState.gender} onChange={handleGenderChange} />},
+        {name: "Nationality", input: <Select id="nationality" fluid search placeholder='Nationality' className="input-form" options={localState.nationalityList} value={localState.nationality} onChange={handleNationalityChange} />},
+        {name: "Contact:", input:<Input id="contact" fluid placeholder='Contact' className="input-form" type="text" value={localState.contact} onChange={handleContactChange} />},
+    ];
 
     useEffect(()=>{
         chargeCountries();
@@ -61,6 +73,9 @@ const PersonForm: FunctionComponent<PersonFormProps> = () => {
     function handleNationalityChange (event:any, {name, value}:any) {
         setLocalState({...localState,nationality: value});
     }
+    function handleContactChange (event:any, {name, value}:any) {
+        setLocalState({...localState,contact: value});
+    }
 
     function handleSubmit(event:any){
         event.preventDefault();
@@ -70,13 +85,52 @@ const PersonForm: FunctionComponent<PersonFormProps> = () => {
                 localState.documentType + '","document_id":"'+ localState.document +'","gender":"'+ localState.gender+ '","nationality":"'+ localState.nationality+ '"}';
                 
             axios.post(`https://personapibogbackend.herokuapp.com/person/`, JSON.parse(newPerson))
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            }).catch( err => {
+            .catch( err => {
                 if(err.response.data.message)
                     alert(err.response.data.message);
             });
+    }
+
+    function datePicker(){
+        return(
+            <DateInput id="dateOfBirth" fluid className="date-form" name="date"
+            placeholder="Date of Birth"
+            iconPosition="right"
+            onChange={handleDateOfBirthChange} 
+            value={localState.dateOfBirth} 
+        />
+        );
+    }
+
+    function printTableForm(status?:string) {
+        return formCreateContent.map((formElement:any)=>{
+            return(
+                <Table.Row>
+                    <Table.Cell width={2}>{formElement.name}</Table.Cell>
+                    <Table.Cell className={status} width={10}>
+                        {formElement.input}
+                    </Table.Cell>
+                </Table.Row>
+            );
+        })
+    }
+
+    function inspect() {
+        const url = (props.type.split("/"));
+        const id = url[url.length-1];
+        
+        axios.get(`https://personapibogbackend.herokuapp.com/person/${id}`)
+            .catch( err => {
+                if(err.response.data.message)
+                    alert(err.response.data.message);
+            });
+        return printTableForm("disabled");
+    }
+
+    function update() {
+        return(
+"update"
+        );
     }
 
     return(
@@ -85,54 +139,9 @@ const PersonForm: FunctionComponent<PersonFormProps> = () => {
                 <h2>Add Person</h2>
                 <Table basic='very'>
                     <Table.Body>
-                        <Table.Row>
-                            <Table.Cell width={2}> Name:</Table.Cell>
-                            <Table.Cell width={10}> <Input id="name" fluid placeholder='Name' className="input-form" type="text" value={localState.name} onChange={handleNameChange} /></Table.Cell>
-                        </Table.Row>
-                        
-                        <Table.Row>
-                            <Table.Cell width={2}>Last Name:</Table.Cell>
-                            <Table.Cell width={10}> <Input id="lantName" fluid placeholder='Last Name' className="input-form" type="text" value={localState.lastName} onChange={handleLastNameChange} /></Table.Cell>
-                        </Table.Row>
-                        
-                        <Table.Row>
-                            <Table.Cell width={2}>Document Type:</Table.Cell>
-                            <Table.Cell width={10}>
-                                <Select fluid id="documentType" placeholder='Document Type' className="input-form" options={localState.documentTypeList} type="text" value={localState.documentType} onChange={handleDocumentTypeChange} />
-                            </Table.Cell>
-                        </Table.Row>
-                        
-                        <Table.Row>
-                            <Table.Cell width={2}>Document:</Table.Cell>
-                            <Table.Cell width={10}><Input id="document" fluid placeholder='Document' className="input-form" type="text" value={localState.document} onChange={handleDocumentChange} /></Table.Cell>
-                        </Table.Row>
-                        
-                        <Table.Row>
-                            <Table.Cell width={2}>Date of Birth:</Table.Cell>
-                            <Table.Cell width={10}>
-                                <DateInput id="dateOfBirth" fluid className="date-form" name="date"
-                                    placeholder="Date of Birth"
-                                    iconPosition="right"
-                                    onChange={handleDateOfBirthChange} 
-                                    value={localState.dateOfBirth} 
-                                />
-                            </Table.Cell>
-                        </Table.Row>
-                        
-                        <Table.Row>
-                            <Table.Cell width={2}>Gender:</Table.Cell>
-                            <Table.Cell width={10}>
-                                <Select id="gender" fluid placeholder='Gender' className="input-form" options={localState.genderList} type="text" value={localState.gender} onChange={handleGenderChange} />
-                            </Table.Cell>
-                        </Table.Row>
-
-                        <Table.Row>
-                            <Table.Cell width={2}>Nationality:</Table.Cell>
-                            <Table.Cell width={10}>
-                                <Select id="nationality" fluid search placeholder='Nationality' className="input-form" options={localState.nationalityList} value={localState.nationality} onChange={handleNationalityChange} />
-                            </Table.Cell>
-                        </Table.Row>
-                        
+                        {
+                            props.type === "/person/create" ?  printTableForm() : (props.type.includes("/person/update") ?  update() : inspect() )
+                        }
                     </Table.Body>
                 </Table>
                 <Button className="submit_button" basic floated='right' type="submit" content="Add" />
