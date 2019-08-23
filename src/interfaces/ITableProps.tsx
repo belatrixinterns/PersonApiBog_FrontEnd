@@ -6,5 +6,5 @@ export interface ITableProps {
     columnsAccessor: Array<string>;
     loading: boolean;
     searchPlaceHolder:string;
-    buttonContent: string;
+    button: Function;
 }

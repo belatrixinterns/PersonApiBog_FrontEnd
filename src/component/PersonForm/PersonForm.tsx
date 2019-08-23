@@ -66,9 +66,10 @@ const PersonForm: FunctionComponent<PersonFormProps> = () => {
         event.preventDefault();
             var splitDate = localState.dateOfBirth.split("-");
             var formatDate = splitDate[2]+"-"+splitDate[1]+"-"+splitDate[0];
-            const newPerson = '{"name":"' + localState.name + '", "last_name":"'  + localState.lastName + '","date_of_birth":"'+ formatDate + '","document_type":"'+
+            const newPerson = '{"name":"' + localState.name + '","last_name":"'  + localState.lastName + '","date_of_birth":"'+ formatDate + '","document_type":"'+
                 localState.documentType + '","document_id":"'+ localState.document +'","gender":"'+ localState.gender+ '","nationality":"'+ localState.nationality+ '"}';
-            axios.post(`http://localhost:8080/person/`, { newPerson })
+                
+            axios.post(`https://personapibogbackend.herokuapp.com/person/`, JSON.parse(newPerson))
             .then(res => {
                 console.log(res);
                 console.log(res.data);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { IPerson } from "../../interfaces/IPerson";
 import ListPersonComponent from "../../component/ListPerson/ListPersonComponent";
+import axios from "axios";
 
 const ListPersonPage: React.FC<{}> = () => {
 
@@ -8,8 +9,8 @@ const ListPersonPage: React.FC<{}> = () => {
   const [loading, setLoading] = useState(true);
 
   function getPeople() {
-    fetch('https://personapibogbackend.herokuapp.com/person/')
-      .then(response => response.json())
+    axios.get('https://personapibogbackend.herokuapp.com/person/')
+      .then(response => response.data)
       .then(posts => setPeople(posts))
       .catch(err => console.log(err.message))
   }

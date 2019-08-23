@@ -1,10 +1,11 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 import ReactTable, { Filter } from "react-table";
 import { ITableProps } from "../../interfaces/ITableProps";
 import "../../assets/TableComponent.css"
 import SearchComponent from './SearchComponent';
 import { Grid, Button, GridRow } from "semantic-ui-react";
-
+import { Link } from "react-router-dom";
+import CreatePersonButton from "../shared/CreatePersonButton"
 
 class TableComponent extends React.Component<ITableProps> {
 
@@ -47,6 +48,8 @@ class TableComponent extends React.Component<ITableProps> {
     }
 
     public render() {
+        const buttonCreatr =  this.props.button;    
+        
         return <div className="table-margin">
             <ReactTable
                 getTheadFilterProps={() => {
@@ -81,13 +84,10 @@ class TableComponent extends React.Component<ITableProps> {
                                         <SearchComponent data={state} searchPlaceHolder={this.props.searchPlaceHolder} handleFilter={this.onKeyInputEnter} />
                                     </Grid.Column>
                                     <Grid.Column width={6}>
-                                        <Button
-                                            color="green"
-                                            content={this.props.buttonContent}
-                                            icon="add"
-                                            labelPosition="left"
-                                        >
-                                        </Button>
+                                        
+                                        <Link to="/person/create">
+                                            {this.props.button()}
+                                        </Link>
                                     </Grid.Column>
                                 </Grid.Row>
                             </Grid>
