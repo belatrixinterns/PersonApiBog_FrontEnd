@@ -6,5 +6,5 @@ export interface ITableProps {
     columnsAccessor: Array<string>;
     loading: boolean;
     searchPlaceHolder:string;
-    button: React.FC;
+    button: Function;
 }
