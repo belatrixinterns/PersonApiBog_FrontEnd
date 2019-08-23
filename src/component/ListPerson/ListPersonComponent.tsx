@@ -6,6 +6,7 @@ import { IListPersonProps } from "../../interfaces/IListPersonProps";
 import { Button } from "semantic-ui-react";
 import matchSorter from 'match-sorter';
 import CreatePersonButton from "../shared/CreatePersonButton";
+import { Link } from "react-router-dom";
 
 const ListPersonComponent: React.FC<IListPersonProps> = (props) => {
 
@@ -66,32 +67,36 @@ const ListPersonComponent: React.FC<IListPersonProps> = (props) => {
       sortable: false,
       filterMethod: filter,
       filterAll: true,
-      Cell: row => (
-        <div>
+      Cell: row => {
+        const person: IPerson = row.original; return (
+          <div>
+            <Link to={`person/update/${person.id}`}>
+              <Button
+                className="circular ui icon button"
+                primary
+              >
+                <i className="icon settings" />
+              </Button>
+            </Link>
+            <Button
+              onClick={() => props.handleDelete(person)}
+              className="circular ui icon button"
+              color="red">
+              <i className="icon trash" />
+            </Button>
+            <Link to={`person/inspect/${person.id}`}>
+              <Button
 
-          <Button
-            onClick={() => props.handleUpdate(row.original)}
-            className="circular ui icon button"
-            primary
-          >
-            <i className="icon settings" />
-          </Button>
-          <Button
-            onClick={() => props.handleDelete(row.original)}
-            className="circular ui icon button"
-            color="red">
-            <i className="icon trash" />
-          </Button>
-          <Button
-            onClick={() => props.handleInspect(row.original)}
-            className="circular ui icon button"
-            color="black">
-            <i className="icon eye" />
+                className="circular ui icon button"
+                color="black">
+                <i className="icon eye" />
 
-          </Button>
-        </div>
+              </Button>
+            </Link>
+          </div >
 
-      ),
+        )
+      },
     },
   ];
 
