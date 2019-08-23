@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Form, Input } from 'semantic-ui-react';
+import { Form, Input } from 'semantic-ui-react';
 
 const SearchComponent: React.FC<any> = (table: any) => {
 

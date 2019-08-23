@@ -1,11 +1,10 @@
-import React, { FunctionComponent } from "react";
+import React from "react";
 import ReactTable, { Filter } from "react-table";
 import { ITableProps } from "../../interfaces/ITableProps";
 import "../../assets/TableComponent.css"
 import SearchComponent from './SearchComponent';
-import { Grid, Button, GridRow } from "semantic-ui-react";
-import { Link } from "react-router-dom";
-import CreatePersonButton from "../shared/CreatePersonButton"
+import { Grid} from "semantic-ui-react";
+import GoBackButton from "./GoBackButton";
 
 class TableComponent extends React.Component<ITableProps> {
 
@@ -14,15 +13,12 @@ class TableComponent extends React.Component<ITableProps> {
         filterValue: ""
     }
 
-    constructor(props: ITableProps) {
-        super(props);
-    }
     onKeyInputEnter = (filtered: string) => {
         let filters: Array<Filter> = this.props.columnsAccessor.map(currentColumn => ({ id: currentColumn, value: filtered }))
         if (filtered.length > 0) {
             if (filtered.length > 1) {
                 let filterObject = this.state.filteredObject.map(filter => {
-                    let filterAct = filters.find(fil => fil.id == filter.id);
+                    let filterAct = filters.find(fil => fil.id === filter.id);
                     if (filterAct) {
                         filter.value = filterAct.value;
                         return filter;
@@ -33,7 +29,7 @@ class TableComponent extends React.Component<ITableProps> {
                 this.setState((prev: any) => ({ filteredObject: prev.filteredObject.concat(filters) }))
             }
         } else {
-            this.setState({ filteredObject: this.state.filteredObject.filter(filter => !filters.find(filActual => filActual.id == filter.id)) })
+            this.setState({ filteredObject: this.state.filteredObject.filter(filter => !filters.find(filActual => filActual.id === filter.id)) })
         }
     }
 
@@ -41,15 +37,13 @@ class TableComponent extends React.Component<ITableProps> {
         if (this.state.filteredObject.length > 1 && this.state.filterValue.length) {
             const filterAll = "";
             this.setState({
-                filteredObject: changed.filter((item: any) => item.id != "all"),
+                filteredObject: changed.filter((item: any) => item.id !== "all"),
                 filterValue: filterAll
             });
         } else this.setState({ filteredObject: changed });
     }
 
     public render() {
-        const buttonCreatr =  this.props.button;    
-        
         return <div className="table-margin">
             <ReactTable
                 getTheadFilterProps={() => {
@@ -84,15 +78,20 @@ class TableComponent extends React.Component<ITableProps> {
                                         <SearchComponent data={state} searchPlaceHolder={this.props.searchPlaceHolder} handleFilter={this.onKeyInputEnter} />
                                     </Grid.Column>
                                     <Grid.Column width={6}>
-                                        
-                                        <Link to="/person/create">
-                                            {this.props.button()}
-                                        </Link>
+                                        {this.props.button()}
                                     </Grid.Column>
                                 </Grid.Row>
                             </Grid>
                             {makeTable()}
-                        </div>);
+                            <Grid>
+                                <Grid.Row>
+                                    <Grid.Column textAlign="right">
+                                        <GoBackButton></GoBackButton>
+                                    </Grid.Column>
+                                </Grid.Row>
+                            </Grid>
+                        </div>
+                    );
                 }}
             </ReactTable>
         </div>;
