@@ -4,6 +4,8 @@ import {DateInput} from 'semantic-ui-calendar-react';
 import axios from 'axios';
 import { createBrowserHistory } from 'history';
 import { toast } from 'react-toastify';
+import PersonApi from '../../api/personApi';
+import { IPerson } from '../../interfaces/IPerson';
 
 
 type PersonFormProps = {
@@ -85,11 +87,14 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
         event.preventDefault();
         var splitDate = localState.dateOfBirth.split("-");
         var formatDate = splitDate[2]+"-"+splitDate[1]+"-"+splitDate[0];
-        const newPerson = '{"name":"' + localState.name + '","last_name":"'  + localState.lastName + '","date_of_birth":"'+ formatDate + '","document_type":"'+
+        const newPerson:IPerson = JSON.parse('{"name":"' + localState.name + '","last_name":"'  + localState.lastName + '","date_of_birth":"'+ formatDate + '","document_type":"'+
             localState.documentType + '","document_id":"'+ localState.document +'","gender":"'+ localState.gender+ '","nationality":"'+ localState.nationality + 
-            '","contact":"'+ localState.contact +'"}';
-            
-        axios.post(`https://personapibogbackend.herokuapp.com/person/`, JSON.parse(newPerson))
+            '","contact":"'+ localState.contact +'"}');
+        PersonApi.createPerson(newPerson)
+        .then(()=>{
+            history.goBack();
+            toast.info("Person created succesfully");
+        })
         .catch( err => {
             if(err.response.data.message)
                 alert(err.response.data.message);
@@ -124,15 +129,14 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
         if(!props.type.includes("/person/update") && !props.type.includes("/person/create")){
             const url = (props.type.split("/"));
             const id = url[url.length - 1];
-            axios.get(`https://personapibogbackend.herokuapp.com/person/${id}`)
-            .then(response => response.data)
-            .then((data) => {
+            PersonApi.getPerson(id)
+            .then((data:any) => {
                 setLocalState({... localState, "name": data.name, "lastName": data.last_name, "documentType": data.document_type, "document": data.document_id, 
                     "dateOfBirth": data.date_of_birth, "gender": data.gender, "nationality": data.nationality, "contact": data.contact});
                 }
             )
             .catch(err => {
-                if (err.response.data && err.response.data.message){
+                if (err.response && err.response.data.message){
                     toast.error(err.response.data.message);
                     history.goBack();
                 }
