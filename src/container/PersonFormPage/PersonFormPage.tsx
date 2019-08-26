@@ -5,10 +5,6 @@ type PageFormProps = {
 }
 
 class PersonFormPage extends React.Component<PageFormProps> {
-    constructor(props: any){
-        super(props);        
-        
-    }
     findAllItems() {
         
     }
