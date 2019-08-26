@@ -3,6 +3,7 @@ import { Input, Select, Table, Button, Grid } from 'semantic-ui-react';
 import { DateInput } from 'semantic-ui-calendar-react';
 import axios from 'axios';
 import GoBackButton from '../shared/GoBackButton';
+import { async } from 'q';
 
 
 type PersonFormProps = {
@@ -85,7 +86,8 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
             var splitDate = localState.dateOfBirth.split("-");
             var formatDate = splitDate[2]+"-"+splitDate[1]+"-"+splitDate[0];
             const newPerson = '{"name":"' + localState.name + '","last_name":"'  + localState.lastName + '","date_of_birth":"'+ formatDate + '","document_type":"'+
-                localState.documentType + '","document_id":"'+ localState.document +'","gender":"'+ localState.gender+ '","nationality":"'+ localState.nationality+ '"}';
+                localState.documentType + '","document_id":"'+ localState.document +'","gender":"'+ localState.gender+ '","nationality":"'+ localState.nationality + 
+                '","contact":"'+ localState.contact +'"}';
                 
             axios.post(`https://personapibogbackend.herokuapp.com/person/`, JSON.parse(newPerson))
             .catch( err => {
@@ -118,16 +120,29 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
         })
     }
 
-    function inspect() {
-        const url = (props.type.split("/"));
-        const id = url[url.length-1];
-        
-        axios.get(`https://personapibogbackend.herokuapp.com/person/${id}`)
-            .catch( err => {
-                if(err.response.data.message)
-                    alert(err.response.data.message);
-            });
-        return printTableForm("disabled");
+    const inspect = () => {
+
+        if(!props.type.includes("/person/update") && !props.type.includes("/person/create")){
+            const url = (props.type.split("/"));
+            const id = url[url.length - 1];
+
+            axios.get(`https://personapibogbackend.herokuapp.com/person/${id}`)
+                .then(response => response.data)
+                .then((data) => {
+                    console.log(data)
+                    setLocalState({... localState, "name": data.name, "lastName": data.last_name, "documentType": data.document_type, "document": data.document_id, 
+                        "dateOfBirth": data.date_of_birth, "gender": data.gender, "nationality": data.nationality, "contact": data.contact});
+                    //const dataCountry = localState.nationalityList.map((country:any) => {
+                    //    if(data.nationality == country.value)
+                    //        return country; 
+                    //})
+                    //formCreateContent[6].input = <Select id="nationality" fluid search placeholder='Nationality' className="input-form" options={dataCountry} value={dataCountry} onChange={handleNationalityChange} />;
+                })
+                .catch(err => {
+                    if (err.response.data.message)
+                        alert(err.response.data.message);
+                });
+        }
     }
 
     function update() {
@@ -143,7 +158,7 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
                 <Table basic='very'>
                     <Table.Body>
                         {
-                            props.type === "/person/create" ?  printTableForm() : (props.type.includes("/person/update") ?  update() : inspect() )
+                            props.type === "/person/create" ?  printTableForm() : (props.type.includes("/person/update") ?  update() : printTableForm("disabled") )
                         }
                     </Table.Body>
                 </Table>
