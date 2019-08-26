@@ -33,9 +33,9 @@ const ListPersonPage: React.FC<{}> = () => {
     if (personToDelete) {
       personApi.deletePerson(personToDelete.id)
         .then((personDeleted: IPerson) => {
-          setPeople(people.filter(person => person.id != personDeleted.id))
+          setPeople(people.filter(person => person.id !== personDeleted.id))
           toast.info(MESSAGES.DELETE_PERSON_SUCESSFULL)
-        }).catch(() => { toast.error(MESSAGES.DELETE_A_NON_EXIST_PERSON); setPeople(people.filter(person => person.id != personToDelete.id)) })
+        }).catch(() => { toast.error(MESSAGES.DELETE_A_NON_EXIST_PERSON); setPeople(people.filter(person => person.id !== personToDelete.id)) })
       setStateShowConfirmComponent(false)
     }
   }
