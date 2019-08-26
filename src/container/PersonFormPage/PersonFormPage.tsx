@@ -11,7 +11,6 @@ const PersonFormPage:FunctionComponent = (props:any) => {
             <PersonForm type={props.match && props.match.url}/>
         </div>
     );
-
 }
 
 export default PersonFormPage;
