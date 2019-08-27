@@ -209,7 +209,9 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
     return (
         <div className="person_form_container">
             <form className="person_form" onSubmit={handleSubmit}>
-                <h2>Add Person</h2>
+                {
+                    props.type === "/person/create" ?  <h1>Add person</h1> : (props.type.includes("/person/update") ?  <h1>Update person</h1> : <h1>Inspect person</h1>) 
+                }
                 <Table basic='very'>
                     <Table.Body>
                         {
