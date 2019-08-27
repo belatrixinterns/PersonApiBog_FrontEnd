@@ -5,6 +5,7 @@ import { createBrowserHistory } from 'history';
 import { toast } from 'react-toastify';
 import PersonApi from '../../api/personApi';
 import { IPerson } from '../../interfaces/IPerson';
+import contactValidation from '../shared/contactValidation';
 
 
 type PersonFormProps = {
@@ -19,17 +20,17 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
 
     const [listState, setListState] = useState({nationalityList:[{}], 
         genderList: [{key:'0', value:'0', text:'Female'}, {key:'1', value:'1', text:'Male'}],
-        documentTypeList: [{key:'1', value:'CC', text:'Citizenship Card'}, {key:'2', value:'CE', text:'Foreign Card'}, {key:'3', value:'TI', text:'Identity Card'}]});
+        documentTypeList: [{key:'1', value:'CC', text:'Citizenship Card',}, {key:'2', value:'CE', text:'Foreign Card'}, {key:'3', value:'TI', text:'Identity Card'}]});
 
     const getFormCreateContent= () =>{ return([
-        {name: "Name:", input: <Input id="name" fluid required placeholder='Name' className="input-form" type="text" value={localState.name} onChange={handleNameChange} />},
-        {name: "Last Name:", input: <Input id="lantName" fluid required placeholder='Last Name' className="input-form" type="text" value={localState.lastName} onChange={handleLastNameChange} />},
+        {name: "Name:", input: <Input id="name" fluid required maxLength="25" placeholder='Name' className="input-form" type="text" value={localState.name} onChange={handleNameChange} />},
+        {name: "Last Name:", input: <Input id="lantName" fluid required maxLength="25" placeholder='Last Name' className="input-form" type="text" value={localState.lastName} onChange={handleLastNameChange} />},
         {name: "Document Type:", input:<Select fluid required id="documentType" placeholder='Document Type' className="input-form" options={listState.documentTypeList} type="text" value={localState.documentType} onChange={handleDocumentTypeChange} />},
-        {name: "Document:", input:<Input id="document" fluid placeholder='Document' className="input-form" type="text" value={localState.document} onChange={handleDocumentChange} />},
+        {name: "Document:", input:<Input id="document" fluid placeholder='Document' maxLength={localState.documentType == "CE"? 20:10} className="input-form" type="text" value={localState.document} onChange={handleDocumentChange} />},
         {name: "Date of Birth:", input: datePicker()},
         {name: "Gender:", input: <Select id="gender" fluid placeholder='Gender' className="input-form" options={listState.genderList} type="text" value={localState.gender} onChange={handleGenderChange} />},
         {name: "Nationality", input: <Select id="nationality" fluid search placeholder='Nationality' value={localState.nationality} className="input-form" options={listState.nationalityList} onChange={handleNationalityChange} />},
-        {name: "Contact:", input:<Input id="contact" fluid placeholder='Contact' className="input-form" type="text" value={localState.contact} onChange={handleContactChange} />},
+        {name: "Contact:", input:<Input id="contact" fluid maxLength="30" placeholder='Contact' className="input-form" type="text" value={localState.contact} onChange={handleContactChange} />},
     ])};
 
     useEffect(() => {
@@ -77,6 +78,13 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
         const newPerson:IPerson = JSON.parse('{"name":"' + localState.name + '","last_name":"'  + localState.lastName + '","date_of_birth":"'+ formatDate + '","document_type":"'+
             localState.documentType + '","document_id":"'+ localState.document +'","gender":"'+ localState.gender+ '","nationality":"'+ localState.nationality + 
             '","contact":"'+ localState.contact +'"}');
+
+        var validation:{mssg:string, request:boolean} = contactValidation(newPerson.contact);
+        if(!validation.request && validation.mssg){
+            toast.error(validation.mssg);
+            return;
+        }
+
         PersonApi.createPerson(newPerson)
         .then(()=>{
             history.goBack();
