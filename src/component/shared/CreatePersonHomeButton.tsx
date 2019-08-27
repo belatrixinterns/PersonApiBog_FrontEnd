@@ -2,10 +2,10 @@ import React from "react";
 import { Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
-const CreatePersonButton = () => {
+const CreatePersonHomeButton = () => {
     return(
-        <Link to="/person/create">
-            <Button
+        <Link to="/person/create" className="button-size">
+            <Button className="button-size"
             color="green"
             content="Create person"
             icon="add"
@@ -17,4 +17,4 @@ const CreatePersonButton = () => {
  }
   
 
-  export default CreatePersonButton;
+  export default CreatePersonHomeButton;

@@ -6,7 +6,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import PersonFormPage from '../../container/PersonFormPage/PersonFormPage';
 import Home from '../../container/Home/Home';
 import { Grid } from 'semantic-ui-react';
-import {ToastContainer} from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 const App: React.FC = () => {
   return (
@@ -20,17 +20,18 @@ const App: React.FC = () => {
           </Grid.Row>
           <Grid.Row className="Body">
             <Grid.Column>
-              <ToastContainer> 
-                
+              <ToastContainer>
+
               </ToastContainer>
               <Route path="/home" exact component={Home} />
               <Route path="/person/create" exact component={PersonFormPage} />
               <Route path="/persons" exact component={ListPersonPage} />
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row className="Footer">
-          </Grid.Row>
+
         </Grid>
+      </div>
+      <div className="Footer">
       </div>
     </BrowserRouter>
   );

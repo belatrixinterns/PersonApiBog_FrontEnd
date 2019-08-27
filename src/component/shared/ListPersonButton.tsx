@@ -2,13 +2,13 @@ import React from "react";
 import { Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
-const CreatePersonButton = () => {
+const ListPersonButton = () => {
     return(
-        <Link to="/person/create">
-            <Button
-            color="green"
-            content="Create person"
-            icon="add"
+        <Link to="/persons">
+            <Button className="button-size"
+            color="blue"
+            content="List person"
+            icon="users"
             labelPosition="left"
             size="medium"
             />
@@ -17,4 +17,4 @@ const CreatePersonButton = () => {
  }
   
 
-  export default CreatePersonButton;
+  export default ListPersonButton;
