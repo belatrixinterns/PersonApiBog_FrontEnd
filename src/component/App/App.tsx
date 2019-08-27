@@ -21,7 +21,7 @@ const App: React.FC = () => {
           <Grid.Row className="Body">
             <Grid.Column>
               <ToastContainer/>
-              <Route path="/home" exact component={Home} />
+              <Route path="/" exact component={Home} />
               <Route path="/person/create" exact component={PersonFormPage} />
               <Route path="/person/update/:id" exact component={PersonFormPage} />
               <Route path="/person/inspect/:id" exact component={PersonFormPage} />
