@@ -8,7 +8,7 @@ class PersonApi extends Api
     return this.handlePromiseResponse(axios.get('https://personapibogbackend.herokuapp.com/person/'))
   }
 
-  public static getPerson(id: Number): Promise<IPerson>{
+  public static getPerson(id: String): Promise<IPerson>{
     return this.handlePromiseResponse(axios.get(`https://personapibogbackend.herokuapp.com/person/${id}`));
   }
 

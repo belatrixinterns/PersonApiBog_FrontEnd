@@ -1,20 +1,16 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import PersonForm from '../../component/PersonForm/PersonForm'
 
-type PageFormProps = {
-}
 
-class PersonFormPage extends React.Component<PageFormProps> {
-    findAllItems() {
-        
-    }
-    render(){
-        return(
-            <div className="CreatePerson">
-                <PersonForm findAllItems={this.findAllItems}/>
-            </div>
-        );
-    }
+const PersonFormPage:FunctionComponent = (props:any) => {
+    console.log(props.match);
+
+
+    return(
+        <div className="CreatePerson">
+            <PersonForm type={props.match && props.match.url}/>
+        </div>
+    );
 }
 
 export default PersonFormPage;
