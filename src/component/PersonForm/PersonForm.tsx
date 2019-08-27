@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import {Input, Table, Button, Select} from 'semantic-ui-react';
+import {Input, Table, Button, Select, Confirm} from 'semantic-ui-react';
 import {DateInput} from 'semantic-ui-calendar-react';
 import { createBrowserHistory } from 'history';
 import { toast } from 'react-toastify';
@@ -8,6 +8,9 @@ import { IPerson } from '../../interfaces/IPerson';
 import contactValidation from '../shared/contactValidation';
 import nameValidation from '../shared/nameValidation';
 import documentValidation from '../shared/documentValidation';
+import { Link, Redirect } from 'react-router-dom';
+import GoBackButton from '../shared/GoBackButton';
+import MESSAGES from '../shared/Messages';
 
 
 type PersonFormProps = {
@@ -23,6 +26,8 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
     const [listState, setListState] = useState({nationalityList:[{}], 
         genderList: [{key:'0', value:'0', text:'Female'}, {key:'1', value:'1', text:'Male'}],
         documentTypeList: [{key:'1', value:'CC', text:'Citizenship Card',}, {key:'2', value:'CE', text:'Foreign Card'}, {key:'3', value:'TI', text:'Identity Card'}]});
+
+    const [confirmOpen, setConfirmOpen] = useState({confirmState:false});
 
     const getFormCreateContent= () =>{ return([
         {name: "Name:", input: <Input id="name" fluid required maxLength="25" placeholder='Name' className="input-form" type="text" value={localState.name} onChange={handleNameChange} />},
@@ -142,6 +147,10 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
             .then((data:any) => {
                 var splitDate = data.date_of_birth.split("-");
                 var formatDate = splitDate[2]+"-"+splitDate[1]+"-"+splitDate[0];
+                
+                while(data.nationality.split("").length < 3){
+                    data.nationality = "0" + data.nationality;
+                }
 
                 setLocalState({...localState, "name": data.name, "lastName": data.last_name, "documentType": data.document_type, "document": data.document_id, 
                     "dateOfBirth": formatDate, "gender": data.gender, "nationality": data.nationality, "contact": data.contact});
@@ -198,31 +207,63 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
         });
     }
 
-    function cancelButtonHandler(event:any){
-        history.goBack();
+    
+    function setStateShowConfirmComponent(state: boolean) {
+        setConfirmOpen({confirmState:state})
+      }
+
+
+    function deleteButtonHandler(event:any){
+        setStateShowConfirmComponent(true);
     }
 
     function createbuttons(){
         return(
             <div>
-                <Button className="submit_button" basic floated='right' type="submit" content="Add" />
-                <Button className="submit_button" type="button" onClick={cancelButtonHandler} basic floated='right' content="Cancel" />
+                <Button className="submit_button" floated='right' type="submit" content="Add" icon="add" />
+                <GoBackButton></GoBackButton>
             </div>
         );
     }
 
     function updateButtons(){
         return(
-            <div>
-                <Button className="submit_button" basic floated='right' onClick={updateButtonHandler} type="submit" content="Update" />
-                <Button className="submit_button" type="button" onClick={cancelButtonHandler} basic floated='right' content="Cancel" />
+            <div>               
+                <Button className="submit_button"  floated='right' onClick={updateButtonHandler} type="submit" >
+                    <i className="icon settings" /> Update
+                </Button>
+                <GoBackButton></GoBackButton>
+                                    
             </div>
         );
     }
 
     function inspectButtons(){
+        const url = (props.type.split("/"));
+        const id = url[url.length - 1];
         return(
-            <Button className="submit_button" type="button" onClick={cancelButtonHandler} basic floated='right' content="Cancel" />
+            <div>
+                <Link to={`/person/update/${id}`} replace >
+                    <Button className="submit_button" type="button" floated='right'>
+                        <i className="icon settings" /> Update
+                    </Button>
+                </Link> 
+                <Confirm
+                    content={`${localState ? "Are you sure to delete " + localState.name.toLocaleUpperCase() + "?" : MESSAGES.DELETE_A_NON_EXIST_PERSON}`}
+                    open={confirmOpen.confirmState}
+                    onCancel={() => setStateShowConfirmComponent(false)}
+                    onConfirm={() => {
+                        PersonApi.deletePerson(parseInt(id)).then(()=>{
+                            window.location.href = "/persons";
+                        });
+                        setStateShowConfirmComponent(false);
+                    }} 
+                />
+                 <Button className="submit_button" type="button" onClick={deleteButtonHandler} floated='right'>
+                    <i className="icon trash" /> Delete
+                </Button>
+                <GoBackButton></GoBackButton>
+            </div>
         );
     }
 
