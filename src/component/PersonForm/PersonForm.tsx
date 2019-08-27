@@ -1,10 +1,16 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import {Input, Table, Button, Select} from 'semantic-ui-react';
+import {Input, Table, Button, Select, Confirm} from 'semantic-ui-react';
 import {DateInput} from 'semantic-ui-calendar-react';
 import { createBrowserHistory } from 'history';
 import { toast } from 'react-toastify';
 import PersonApi from '../../api/personApi';
 import { IPerson } from '../../interfaces/IPerson';
+import contactValidation from '../shared/contactValidation';
+import nameValidation from '../shared/nameValidation';
+import documentValidation from '../shared/documentValidation';
+import { Link, Redirect } from 'react-router-dom';
+import GoBackButton from '../shared/GoBackButton';
+import MESSAGES from '../shared/Messages';
 
 
 type PersonFormProps = {
@@ -19,17 +25,19 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
 
     const [listState, setListState] = useState({nationalityList:[{}], 
         genderList: [{key:'0', value:'0', text:'Female'}, {key:'1', value:'1', text:'Male'}],
-        documentTypeList: [{key:'1', value:'CC', text:'Citizenship Card'}, {key:'2', value:'CE', text:'Foreign Card'}, {key:'3', value:'TI', text:'Identity Card'}]});
+        documentTypeList: [{key:'1', value:'CC', text:'Citizenship Card',}, {key:'2', value:'CE', text:'Foreign Card'}, {key:'3', value:'TI', text:'Identity Card'}]});
+
+    const [confirmOpen, setConfirmOpen] = useState({confirmState:false});
 
     const getFormCreateContent= () =>{ return([
-        {name: "Name:", input: <Input id="name" fluid required placeholder='Name' className="input-form" type="text" value={localState.name} onChange={handleNameChange} />},
-        {name: "Last Name:", input: <Input id="lantName" fluid required placeholder='Last Name' className="input-form" type="text" value={localState.lastName} onChange={handleLastNameChange} />},
+        {name: "Name:", input: <Input id="name" fluid required maxLength="25" placeholder='Name' className="input-form" type="text" value={localState.name} onChange={handleNameChange} />},
+        {name: "Last Name:", input: <Input id="lantName" fluid required maxLength="25" placeholder='Last Name' className="input-form" type="text" value={localState.lastName} onChange={handleLastNameChange} />},
         {name: "Document Type:", input:<Select fluid required id="documentType" placeholder='Document Type' className="input-form" options={listState.documentTypeList} type="text" value={localState.documentType} onChange={handleDocumentTypeChange} />},
-        {name: "Document:", input:<Input id="document" fluid placeholder='Document' className="input-form" type="text" value={localState.document} onChange={handleDocumentChange} />},
+        {name: "Document:", input:<Input id="document" fluid placeholder='Document' maxLength={localState.documentType === "CE"? 20:10} className="input-form" type="text" value={localState.document} onChange={handleDocumentChange} />},
         {name: "Date of Birth:", input: datePicker()},
         {name: "Gender:", input: <Select id="gender" fluid placeholder='Gender' className="input-form" options={listState.genderList} type="text" value={localState.gender} onChange={handleGenderChange} />},
         {name: "Nationality", input: <Select id="nationality" fluid search placeholder='Nationality' value={localState.nationality} className="input-form" options={listState.nationalityList} onChange={handleNationalityChange} />},
-        {name: "Contact:", input:<Input id="contact" fluid placeholder='Contact' className="input-form" type="text" value={localState.contact} onChange={handleContactChange} />},
+        {name: "Contact:", input:<Input id="contact" fluid maxLength="30" placeholder='Contact' className="input-form" type="text" value={localState.contact} onChange={handleContactChange} />},
     ])};
 
     useEffect(() => {
@@ -77,6 +85,23 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
         const newPerson:IPerson = JSON.parse('{"name":"' + localState.name + '","last_name":"'  + localState.lastName + '","date_of_birth":"'+ formatDate + '","document_type":"'+
             localState.documentType + '","document_id":"'+ localState.document +'","gender":"'+ localState.gender+ '","nationality":"'+ localState.nationality + 
             '","contact":"'+ localState.contact +'"}');
+
+        var validation:{mssg:string, request:boolean} = contactValidation(newPerson.contact);
+        if(!validation.request && validation.mssg){
+            toast.error(validation.mssg);
+            return;
+        }
+        validation = nameValidation(newPerson.name, newPerson.last_name);
+        if(!validation.request && validation.mssg){
+            toast.error(validation.mssg);
+            return;
+        }
+        validation = documentValidation(newPerson.document_id, newPerson.document_type);
+        if(!validation.request && validation.mssg){
+            toast.error(validation.mssg);
+            return;
+        }
+
         PersonApi.createPerson(newPerson)
         .then(()=>{
             history.goBack();
@@ -122,6 +147,10 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
             .then((data:any) => {
                 var splitDate = data.date_of_birth.split("-");
                 var formatDate = splitDate[2]+"-"+splitDate[1]+"-"+splitDate[0];
+                
+                while(data.nationality.split("").length < 3){
+                    data.nationality = "0" + data.nationality;
+                }
 
                 setLocalState({...localState, "name": data.name, "lastName": data.last_name, "documentType": data.document_type, "document": data.document_id, 
                     "dateOfBirth": formatDate, "gender": data.gender, "nationality": data.nationality, "contact": data.contact});
@@ -178,31 +207,63 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
         });
     }
 
-    function cancelButtonHandler(event:any){
-        history.goBack();
+    
+    function setStateShowConfirmComponent(state: boolean) {
+        setConfirmOpen({confirmState:state})
+      }
+
+
+    function deleteButtonHandler(event:any){
+        setStateShowConfirmComponent(true);
     }
 
     function createbuttons(){
         return(
             <div>
-                <Button className="submit_button" basic floated='right' type="submit" content="Add" />
-                <Button className="submit_button" type="button" onClick={cancelButtonHandler} basic floated='right' content="Cancel" />
+                <Button className="submit_button" floated='right' type="submit" content="Add" icon="add" />
+                <GoBackButton></GoBackButton>
             </div>
         );
     }
 
     function updateButtons(){
         return(
-            <div>
-                <Button className="submit_button" basic floated='right' onClick={updateButtonHandler} type="submit" content="Update" />
-                <Button className="submit_button" type="button" onClick={cancelButtonHandler} basic floated='right' content="Cancel" />
+            <div>               
+                <Button className="submit_button"  floated='right' onClick={updateButtonHandler} type="submit" >
+                    <i className="icon settings" /> Update
+                </Button>
+                <GoBackButton></GoBackButton>
+                                    
             </div>
         );
     }
 
     function inspectButtons(){
+        const url = (props.type.split("/"));
+        const id = url[url.length - 1];
         return(
-            <Button className="submit_button" type="button" onClick={cancelButtonHandler} basic floated='right' content="Cancel" />
+            <div>
+                <Link to={`/person/update/${id}`} replace >
+                    <Button className="submit_button" type="button" floated='right'>
+                        <i className="icon settings" /> Update
+                    </Button>
+                </Link> 
+                <Confirm
+                    content={`${localState ? "Are you sure to delete " + localState.name.toLocaleUpperCase() + "?" : MESSAGES.DELETE_A_NON_EXIST_PERSON}`}
+                    open={confirmOpen.confirmState}
+                    onCancel={() => setStateShowConfirmComponent(false)}
+                    onConfirm={() => {
+                        PersonApi.deletePerson(parseInt(id)).then(()=>{
+                            window.location.href = "/persons";
+                        });
+                        setStateShowConfirmComponent(false);
+                    }} 
+                />
+                 <Button className="submit_button" type="button" onClick={deleteButtonHandler} floated='right'>
+                    <i className="icon trash" /> Delete
+                </Button>
+                <GoBackButton></GoBackButton>
+            </div>
         );
     }
 

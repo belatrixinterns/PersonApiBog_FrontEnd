@@ -83,6 +83,7 @@ class TableComponent extends React.Component<ITableProps> {
                                 </Grid.Row>
                             </Grid>
                             {makeTable()}
+                            <br />
                             <Grid>
                                 <Grid.Row>
                                     <Grid.Column textAlign="right">

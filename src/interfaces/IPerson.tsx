@@ -1,12 +1,12 @@
 export interface IPerson {
     id: Number,
-    name: String,
-    last_name: String,
+    name: string,
+    last_name: string,
     gender: Number,
     nationality: Number,
-    contact: String,
+    contact: string,
     relationship: [],
     date_of_birth: Date,
-    document_id: Number,
-    document_type: String
+    document_id: string,
+    document_type: string
 }

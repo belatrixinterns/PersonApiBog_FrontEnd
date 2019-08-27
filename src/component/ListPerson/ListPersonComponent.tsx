@@ -109,8 +109,6 @@ const ListPersonComponent: React.FC<IListPersonProps> = (props) => {
     return result;
   }
 
-
-
   return (
     <TableComponent
       columns={columns}

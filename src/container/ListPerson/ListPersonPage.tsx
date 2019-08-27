@@ -40,7 +40,6 @@ const ListPersonPage: React.FC<{}> = () => {
     }
   }
 
-
   return (
     <div>
       <ListPersonComponent data={people} handleDelete={handleDelete} loading={loading} ></ListPersonComponent>
