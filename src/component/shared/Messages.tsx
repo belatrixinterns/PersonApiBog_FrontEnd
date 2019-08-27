@@ -10,6 +10,9 @@ const MESSAGES = {
     CREATE_PERSON_SUCESSFULL: "The person has been created sucessfully",
     CONTACT_INCORRECT_EMAIL: "The person contact email format is incorrect",
     CONTACT_INCORRECT_NUMBER: "The person contact number format is incorrect",
+    DOCUMENT_INVALID_LENGHT: "The person document id length is incorrect",
+    DOCUMENT_INVALID_FORMAT: "The person document id format is incorrect",
+    NAME_INVALID_FORMAT: "The person name format is incorrect",
 }
 
 export default MESSAGES;

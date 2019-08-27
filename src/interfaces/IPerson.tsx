@@ -7,6 +7,6 @@ export interface IPerson {
     contact: string,
     relationship: [],
     date_of_birth: Date,
-    document_id: Number,
+    document_id: string,
     document_type: string
 }

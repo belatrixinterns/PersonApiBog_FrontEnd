@@ -6,6 +6,8 @@ import { toast } from 'react-toastify';
 import PersonApi from '../../api/personApi';
 import { IPerson } from '../../interfaces/IPerson';
 import contactValidation from '../shared/contactValidation';
+import nameValidation from '../shared/nameValidation';
+import documentValidation from '../shared/documentValidation';
 
 
 type PersonFormProps = {
@@ -26,7 +28,7 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
         {name: "Name:", input: <Input id="name" fluid required maxLength="25" placeholder='Name' className="input-form" type="text" value={localState.name} onChange={handleNameChange} />},
         {name: "Last Name:", input: <Input id="lantName" fluid required maxLength="25" placeholder='Last Name' className="input-form" type="text" value={localState.lastName} onChange={handleLastNameChange} />},
         {name: "Document Type:", input:<Select fluid required id="documentType" placeholder='Document Type' className="input-form" options={listState.documentTypeList} type="text" value={localState.documentType} onChange={handleDocumentTypeChange} />},
-        {name: "Document:", input:<Input id="document" fluid placeholder='Document' maxLength={localState.documentType == "CE"? 20:10} className="input-form" type="text" value={localState.document} onChange={handleDocumentChange} />},
+        {name: "Document:", input:<Input id="document" fluid placeholder='Document' maxLength={localState.documentType === "CE"? 20:10} className="input-form" type="text" value={localState.document} onChange={handleDocumentChange} />},
         {name: "Date of Birth:", input: datePicker()},
         {name: "Gender:", input: <Select id="gender" fluid placeholder='Gender' className="input-form" options={listState.genderList} type="text" value={localState.gender} onChange={handleGenderChange} />},
         {name: "Nationality", input: <Select id="nationality" fluid search placeholder='Nationality' value={localState.nationality} className="input-form" options={listState.nationalityList} onChange={handleNationalityChange} />},
@@ -80,6 +82,16 @@ const PersonForm: FunctionComponent<PersonFormProps> = (props) => {
             '","contact":"'+ localState.contact +'"}');
 
         var validation:{mssg:string, request:boolean} = contactValidation(newPerson.contact);
+        if(!validation.request && validation.mssg){
+            toast.error(validation.mssg);
+            return;
+        }
+        validation = nameValidation(newPerson.name, newPerson.last_name);
+        if(!validation.request && validation.mssg){
+            toast.error(validation.mssg);
+            return;
+        }
+        validation = documentValidation(newPerson.document_id, newPerson.document_type);
         if(!validation.request && validation.mssg){
             toast.error(validation.mssg);
             return;
