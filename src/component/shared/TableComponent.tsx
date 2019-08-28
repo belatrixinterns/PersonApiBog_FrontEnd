@@ -14,22 +14,12 @@ class TableComponent extends React.Component<ITableProps> {
     }
 
     onKeyInputEnter = (filtered: string) => {
-        let filters: Array<Filter> = this.props.columnsAccessor.map(currentColumn => ({ id: currentColumn, value: filtered }))
-        if (filtered.length > 0) {
-            if (filtered.length > 1) {
-                let filterObject = this.state.filteredObject.map(filter => {
-                    let filterAct = filters.find(fil => fil.id === filter.id);
-                    if (filterAct) {
-                        filter.value = filterAct.value;
-                        return filter;
-                    }
-                })
-                this.setState({ filteredObject: filterObject })
-            } else {
-                this.setState((prev: any) => ({ filteredObject: prev.filteredObject.concat(filters) }))
-            }
-        } else {
-            this.setState({ filteredObject: this.state.filteredObject.filter(filter => !filters.find(filActual => filActual.id === filter.id)) })
+        const filters: Array<Filter> = this.props.columnsAccessor.map(currentColumn => ({ id: currentColumn, value: filtered }))
+
+        if (filtered.length == 0) {
+            this.setState({ filteredObject: [] }) 
+        } else{
+            this.setState({ filteredObject: filters })
         }
     }
 
