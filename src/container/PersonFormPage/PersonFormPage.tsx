@@ -1,14 +1,12 @@
 import React, { FunctionComponent } from 'react';
 import PersonForm from '../../component/PersonForm/PersonForm'
+import { Route } from 'react-router-dom';
 
 
-const PersonFormPage:FunctionComponent = (props:any) => {
-    console.log(props.match);
-
-
+const PersonFormPage:FunctionComponent = () => {
     return(
         <div className="CreatePerson">
-            <PersonForm type={props.match && props.match.url}/>
+            <Route component={PersonForm}/>
         </div>
     );
 }

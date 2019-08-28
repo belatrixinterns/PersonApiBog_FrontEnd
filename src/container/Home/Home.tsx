@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Grid, GridColumn, Button, List, ListItem, Menu, MenuItem } from 'semantic-ui-react';
+import { Segment, Grid, GridColumn, Menu } from 'semantic-ui-react';
 import CreatePersonHomeButton, { } from "../../component/shared/CreatePersonHomeButton";
 import ListPersonButton, { } from "../../component/shared/ListPersonButton";
 import ListKinshipsButton, { } from "../../component/shared/ListKinshipsButton";
