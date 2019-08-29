@@ -8,6 +8,7 @@ import Home from '../../container/Home/Home';
 import { Grid } from 'semantic-ui-react';
 import { ToastContainer } from "react-toastify";
 import KinshipFormPage from '../../container/KinshipFormPage/KinshipFormPage';
+import ListKinshipPage from '../../container/ListKinship/ListkinshipPage';
 
 const App: React.FC = () => {
   return (
@@ -29,6 +30,7 @@ const App: React.FC = () => {
                 <Route path="/person/inspect/:id" exact component={PersonFormPage} />
                 <Route path="/persons" exact component={ListPersonPage} />
                 <Route path="/kinship/create" exact component={KinshipFormPage} />
+                <Route path="/kinships" exact component={ListKinshipPage} />
               </Switch>
             </Grid.Column>
           </Grid.Row>
