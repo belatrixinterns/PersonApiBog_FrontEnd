@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import { Table, Select } from 'semantic-ui-react';
+import { Table, Select, Button } from 'semantic-ui-react';
 import GoBackButton from '../shared/GoBackButton';
 import PersonApi from '../../api/personApi';
 import { IKinship } from '../../interfaces/IKinship';
@@ -83,13 +83,12 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
         }
     }
 
-    function handleCreateButton(event: any) {
-        if(localState.kinship === "" || localState.personOne === "" || localState.personTwo === "" ){
+    function handleSubmit(event: any) {
+        event.preventDefault();
+        if(localState.kinship === '' || localState.personOne === '' || localState.personTwo === '' ){
             toast.error(MESSAGES.KINSHIP_NOT_NULL);
-            history.push("/kinship/create");
         }
         else{
-            event.preventDefault();
             const newKinship: IKinship = JSON.parse(`{"idFirstPerson":"${localState.personOne}", "idSecondPerson":"${localState.personTwo}", "idRelationType":"${localState.kinship}"}`);
             KinshipApi.createKinship(newKinship)
             .then(()=>{
@@ -104,10 +103,9 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
     }
     
     function updateButtonHandler(event:any){
+        event.preventDefault();
         if(localState.kinship === "" || localState.personOne === "" || localState.personTwo === "" ){
             toast.error(MESSAGES.KINSHIP_NOT_NULL);
-            history.push("/kinship/create");
-            history.go(0);
         }
         else{
             const url = (match.url.split("/"));
@@ -117,17 +115,17 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
             
             KinshipApi.updateKinship(newKinship)
             .then(()=>{
-                //history.goBack();
+                history.goBack();
                 toast.info("Person kinship succesfully");
             })
             .catch( (err:any) => {
                 if (err.response && err.response.data.message){
                     toast.error(err.response.data.message);
-                    //history.goBack();
+                    history.goBack();
                 }
                 else{
                     toast.error("Error on change kinship");
-                    //history.goBack();
+                    history.goBack();
                 }
             });
         }
@@ -172,8 +170,8 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/kinship/create" ?  <CreateButtonsForm handleSubmit={handleCreateButton}/> : (match.url.includes("/kinship/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/> : inspectButtons() )
-                }                
+                    match.url === "/kinship/create" ?  <CreateButtonsForm handleSubmit={handleSubmit}/> : (match.url.includes("/kinship/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/> : inspectButtons() )
+                }   
             </form>
         </div>
     );
