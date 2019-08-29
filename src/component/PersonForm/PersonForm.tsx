@@ -11,6 +11,8 @@ import documentValidation from '../shared/documentValidation';
 import { Link } from 'react-router-dom';
 import GoBackButton from '../shared/GoBackButton';
 import MESSAGES from '../shared/Messages';
+import UpdateButtonsForm from '../shared/updateButtonsForm';
+import createButtonsForm from '../shared/createButtonsForm';
 
 const PersonForm: FunctionComponent = ({match}:any) => {
     const [localState, setLocalState] = useState({name: '',lastName: '',documentType: '',document: '', dateOfBirth: "",gender: '',nationality: '',contact: ''});
@@ -150,7 +152,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                     "dateOfBirth": formatDate, "gender": data.gender, "nationality": data.nationality, "contact": data.contact});
                 }
             )
-            .catch(err => {
+            .catch((err:any) => {
                 if (err.response && err.response.data.message){
                     toast.error(err.response.data.message);
                     history.goBack();
@@ -186,7 +188,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
             history.goBack();
             toast.info("Person updated succesfully");
         })
-        .catch( err => {
+        .catch( (err:any) => {
             if (err.response && err.response.data.message){
                 toast.error(err.response.data.message);
                 history.goBack();
@@ -206,27 +208,6 @@ const PersonForm: FunctionComponent = ({match}:any) => {
 
     function deleteButtonHandler(event:any){
         setStateShowConfirmComponent(true);
-    }
-
-    function createbuttons(){
-        return(
-            <div>
-                <Button className="submit_button" floated='right' type="submit" content="Add" icon="add" />
-                <GoBackButton></GoBackButton>
-            </div>
-        );
-    }
-
-    function updateButtons(){
-        return(
-            <div>               
-                <Button className="submit_button"  floated='right' onClick={updateButtonHandler} type="submit" >
-                    <i className="icon settings" /> Update
-                </Button>
-                <GoBackButton></GoBackButton>
-                                    
-            </div>
-        );
     }
 
     function inspectButtons(){
@@ -271,7 +252,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/person/create" ?  createbuttons() : (match.url.includes("/person/update") ?  updateButtons() : inspectButtons() )
+                    match.url === "/person/create" ?  createButtonsForm() : (match.url.includes("/person/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/>  : inspectButtons() )
                 }
             </form>
         </div>

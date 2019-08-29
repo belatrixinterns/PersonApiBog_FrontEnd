@@ -29,6 +29,7 @@ const App: React.FC = () => {
                 <Route path="/person/inspect/:id" exact component={PersonFormPage} />
                 <Route path="/persons" exact component={ListPersonPage} />
                 <Route path="/kinship/create" exact component={KinshipFormPage} />
+                <Route path="/kinship/update/:id" exact component={KinshipFormPage} />
               </Switch>
             </Grid.Column>
           </Grid.Row>
