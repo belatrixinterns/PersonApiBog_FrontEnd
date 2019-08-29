@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 import GoBackButton from '../shared/GoBackButton';
 import MESSAGES from '../shared/Messages';
 import UpdateButtonsForm from '../shared/updateButtonsForm';
-import createButtonsForm from '../shared/createButtonsForm';
+import CreateButtonsForm from '../shared/createButtonsForm';
 
 const PersonForm: FunctionComponent = ({match}:any) => {
     const [localState, setLocalState] = useState({name: '',lastName: '',documentType: '',document: '', dateOfBirth: "",gender: '',nationality: '',contact: ''});
@@ -74,7 +74,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         setLocalState({...localState,contact: value});
     }
 
-    function handleSubmit(event: any) {
+    function handleCreateButton(event: any) {
         event.preventDefault();
         var splitDate = localState.dateOfBirth.split("-");
         var formatDate = splitDate[2]+"-"+splitDate[1]+"-"+splitDate[0];
@@ -242,8 +242,10 @@ const PersonForm: FunctionComponent = ({match}:any) => {
 
     return (
         <div className="person_form_container">
-            <form className="person_form" onSubmit={handleSubmit}>
-                <h2>Add Person</h2>
+            <form className="person_form" onSubmit={handleCreateButton}>
+                {
+                    match.url === "/person/create" ?  <h2>Add Person</h2> : (match.url.includes("/person/update") ?  <h2>Modify Person</h2> : <h2>Inspect Person</h2>) 
+                }
                 <Table key={"table_form"} basic='very'>
                     <Table.Body key={"table_body_form"}>
                         {
@@ -252,7 +254,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/person/create" ?  createButtonsForm() : (match.url.includes("/person/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/>  : inspectButtons() )
+                    match.url === "/person/create" ?  <CreateButtonsForm handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/>  : inspectButtons() )
                 }
             </form>
         </div>

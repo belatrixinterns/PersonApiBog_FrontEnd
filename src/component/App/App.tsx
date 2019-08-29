@@ -21,8 +21,7 @@ const App: React.FC = () => {
           </Grid.Row>
           <Grid.Row className="Body">
             <Grid.Column>
-              <ToastContainer/>
-              <Switch>
+              <ToastContainer></ToastContainer>
                 <Route path="/" exact component={Home} />
                 <Route path="/person/create" exact component={PersonFormPage} />
                 <Route path="/person/update/:id" exact component={PersonFormPage} />
@@ -30,7 +29,6 @@ const App: React.FC = () => {
                 <Route path="/persons" exact component={ListPersonPage} />
                 <Route path="/kinship/create" exact component={KinshipFormPage} />
                 <Route path="/kinship/update/:id" exact component={KinshipFormPage} />
-              </Switch>
             </Grid.Column>
           </Grid.Row>
 
