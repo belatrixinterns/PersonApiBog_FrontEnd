@@ -13,6 +13,8 @@ const MESSAGES = {
     DOCUMENT_INVALID_LENGHT: "The person document id length is incorrect",
     DOCUMENT_INVALID_FORMAT: "The person document id format is incorrect",
     NAME_INVALID_FORMAT: "The person name format is incorrect",
+    KINSHIP_NOT_NULL: "Please fill all the values",
+    CANT_SELECT_SAME_PERSON: "The person selected is already choosen on this relatioship",
 }
 
 export default MESSAGES;

@@ -15,6 +15,5 @@ const CreatePersonButton = () => {
         </Link>
     );   
  }
-  
 
   export default CreatePersonButton;

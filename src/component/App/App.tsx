@@ -2,7 +2,7 @@ import React from 'react';
 import ListPersonPage from '../../container/ListPerson/ListPersonPage';
 import '../../sass/App.scss';
 import logo from '../../assets/images/logo-belatrix.png';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import PersonFormPage from '../../container/PersonFormPage/PersonFormPage';
 import Home from '../../container/Home/Home';
 import { Grid } from 'semantic-ui-react';
@@ -15,13 +15,15 @@ const App: React.FC = () => {
       <div className="App">
         <Grid>
           <Grid.Row className="App-header">
-            <Grid.Column>
-              <img src={logo} className="App-logo" alt="logo" />
-            </Grid.Column>
+            <Link to="/">
+              <Grid.Column>
+                <img src={logo} className="App-logo" alt="logo" />
+              </Grid.Column>
+            </Link>
           </Grid.Row>
           <Grid.Row className="Body">
             <Grid.Column>
-              <ToastContainer/>
+              <ToastContainer></ToastContainer>
               <Switch>
                 <Route path="/" exact component={Home} />
                 <Route path="/person/create" exact component={PersonFormPage} />
@@ -29,6 +31,8 @@ const App: React.FC = () => {
                 <Route path="/person/inspect/:id" exact component={PersonFormPage} />
                 <Route path="/persons" exact component={ListPersonPage} />
                 <Route path="/kinship/create" exact component={KinshipFormPage} />
+                <Route path="/kinship/update/:id" exact component={KinshipFormPage} />
+                <Route component={NotFound} />
               </Switch>
             </Grid.Column>
           </Grid.Row>
@@ -40,4 +44,6 @@ const App: React.FC = () => {
     </Router>
   );
 }
+
+const NotFound = () => <div className="page_not_found"><img src="https://desarrollowp.com/wp-content/uploads/2018/01/error-404.jpg" alt=""/></div>;
 export default App;
