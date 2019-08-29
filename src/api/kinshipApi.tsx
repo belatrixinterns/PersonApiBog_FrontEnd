@@ -1,6 +1,7 @@
 import axios from "axios";
 import { IKinship } from "../interfaces/IKinship";
 import Api from "./Api";
+import { IKinshipNames } from "../component/shared/IKinshipNames";
 
 class KinshipApi extends Api
 {
@@ -22,6 +23,10 @@ class KinshipApi extends Api
 
   public static deleteKinship(id: Number): Promise<IKinship>{
     return this.handlePromiseResponse(axios.delete(`https://personapibogbackend.herokuapp.com/relationship/${id}`));
+  }
+
+  public static getKinshipsNames(): Promise<IKinshipNames[]>{
+    return this.handlePromiseResponse(axios.get('https://personapibogbackend.herokuapp.com/relationship/names/'))
   }
 }
 
