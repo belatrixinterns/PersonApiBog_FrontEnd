@@ -15,6 +15,8 @@ const MESSAGES = {
     NAME_INVALID_FORMAT: "The person name format is incorrect",
     DELETE_KINSHIP_SUCCESSFUL: "Delete kinship successfull",
     DELETE_A_NON_EXIST_KINSHIP: "You can't delete a non existent kinship",
+    KINSHIP_NOT_NULL: "Please fill all the values",
+    CANT_SELECT_SAME_PERSON: "The person selected is already choosen on this relatioship"
 }
 
 export default MESSAGES;

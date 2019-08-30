@@ -8,6 +8,7 @@
     "@types/react": "16.9.1",
     "@types/react-dom": "16.8.5",
     "axios": "^0.19.0",
+    "eslint-utils": "^1.4.2",
     "history": "^4.9.0",
     "match-sorter": "^4.0.1",
     "node-sass": "^4.12.0",
