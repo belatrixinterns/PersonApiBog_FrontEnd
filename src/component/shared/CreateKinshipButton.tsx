@@ -6,6 +6,7 @@ const CreateKinshipButton = () => {
     return(
         <Link to="/kinship/create">
             <Button
+            className="redirect_create_button"
             color="green"
             content="Create kinship"
             icon="add"
