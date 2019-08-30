@@ -6,6 +6,7 @@ const CreatePersonButton = () => {
     return(
         <Link to="/person/create">
             <Button
+            className="redirect_create_button"
             color="green"
             content="Create person"
             icon="add"
