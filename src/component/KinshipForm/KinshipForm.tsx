@@ -92,7 +92,7 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
             const newKinship: IKinship = JSON.parse(`{"idFirstPerson":"${localState.personOne}", "idSecondPerson":"${localState.personTwo}", "idRelationType":"${localState.kinship}"}`);
             KinshipApi.createKinship(newKinship)
             .then(()=>{
-                //history.goBack();
+                history.goBack();
                 toast.info("Kinship created succesfully");
             })
             .catch( err => {
