@@ -116,7 +116,7 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
             KinshipApi.updateKinship(newKinship)
             .then(()=>{
                 history.goBack();
-                toast.info("Person kinship succesfully");
+                toast.info("Kinship updated succesfully");
             })
             .catch( (err:any) => {
                 if (err.response && err.response.data.message){
