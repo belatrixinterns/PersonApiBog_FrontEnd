@@ -138,30 +138,35 @@ const PersonForm: FunctionComponent = ({match}:any) => {
             const url = (match.url.split("/"));
             const id = url[url.length - 1];
 
-            
-            PersonApi.getPerson(id)
-            .then((data:any) => {
-                var splitDate = data.date_of_birth.split("-");
-                var formatDate = splitDate[2]+"-"+splitDate[1]+"-"+splitDate[0];
+            if(isNaN(id)){
+                toast.info("Id not valid");
+                history.push("/persons");
+                history.go(0);
+            }
+            else{
+                PersonApi.getPerson(id)
+                .then((data:any) => {
+                    var splitDate = data.date_of_birth.split("-");
+                    var formatDate = splitDate[2]+"-"+splitDate[1]+"-"+splitDate[0];
                 
-                while(data.nationality.split("").length < 3){
-                    data.nationality = "0" + data.nationality;
-                }
+                    while(data.nationality.split("").length < 3){
+                        data.nationality = "0" + data.nationality;
+                    }
 
-                setLocalState({...localState, "name": data.name, "lastName": data.last_name, "documentType": data.document_type, "document": data.document_id, 
-                    "dateOfBirth": formatDate, "gender": data.gender, "nationality": data.nationality, "contact": data.contact});
-                }
-            )
-            .catch((err:any) => {
-                if (err.response && err.response.data.message){
-                    toast.error(err.response.data.message);
-                    history.goBack();
-                }
-                else{
-                    toast.error("Error on charge person");
-                    history.goBack();
-                }
-            });
+                    setLocalState({...localState, "name": data.name, "lastName": data.last_name, "documentType": data.document_type, "document": data.document_id, 
+                        "dateOfBirth": formatDate, "gender": data.gender, "nationality": data.nationality, "contact": data.contact});
+                    }
+                )
+                .catch((err:any) => {
+                    if (err.response && err.response.data.message){
+                        toast.error(err.response.data.message);
+                    }
+                    else{
+                        toast.error("Error on charge person");
+                    }
+                });
+
+            }
 
         }
     }
