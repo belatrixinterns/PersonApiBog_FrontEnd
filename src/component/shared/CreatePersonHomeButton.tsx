@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import ReactTooltip from 'react-tooltip';
+import Messages from '../shared/Messages'
 
 const CreatePersonHomeButton = () => {
     return (
@@ -18,7 +19,7 @@ const CreatePersonHomeButton = () => {
                 />
             </Link>
             <ReactTooltip id="react-toooltip-create"   type="info"  place="right">
-               Througd this Button you can go to the Create Person  from.
+               {Messages.TOOLTIP_CREATE_PERSON}
             </ReactTooltip>
         </div>
 

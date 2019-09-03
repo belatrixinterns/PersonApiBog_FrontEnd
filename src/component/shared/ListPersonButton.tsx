@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import ReactTooltip from 'react-tooltip';
+import Messages from '../shared/Messages'
 
 const ListPersonButton = () => {
     return (
@@ -10,7 +11,7 @@ const ListPersonButton = () => {
                 <Button className="button-size"
                     color="blue"
                     content="List person"
-                    icon="users"
+                    icon="list alternate"
                     labelPosition="left"
                     size="medium"
                     data-tip=""
@@ -18,7 +19,7 @@ const ListPersonButton = () => {
                 />
             </Link>
             <ReactTooltip id="react-toooltip-list" type="dark" place="right">
-                Througd this Button you can go to see the Persons.
+                {Messages.TOOLTIP_LIST_PERSON}
             </ReactTooltip>
         </div>
     );

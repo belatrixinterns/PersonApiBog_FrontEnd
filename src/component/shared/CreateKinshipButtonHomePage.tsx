@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import ReactTooltip from 'react-tooltip';
+import Messages from '../shared/Messages'
 
 const CreateKinshipButtonHomePage = () => {
     return (
@@ -19,7 +20,7 @@ const CreateKinshipButtonHomePage = () => {
                 />
             </Link>
             <ReactTooltip id="react-toooltip-create-kinship" type="info" place="right">
-                Througd this Button you can go to the Create kinship from.
+                {Messages.TOOLTIP_CREATE_KINSHIP}
             </ReactTooltip>
 
         </div>

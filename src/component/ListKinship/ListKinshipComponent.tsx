@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import { IRelation } from "../../interfaces/IRelation";
 import { IListKinshipProps } from "../../interfaces/IListKindshipProps";
 import CreateKinshipButton from "../shared/CreateKinshipButton";
+import Messages from '../shared/Messages';
+import ReactTooltip from 'react-tooltip';
 
 const ListKinshipComponent: React.FC<IListKinshipProps> = (props) => {
 
@@ -73,16 +75,27 @@ const ListKinshipComponent: React.FC<IListKinshipProps> = (props) => {
               <Button
                 className="circular ui icon button"
                 primary
+                data-tip=""
+                data-for="react-toooltip-update-kinship"
               >
                 <i className="icon settings" />
               </Button>
+              <ReactTooltip id="react-toooltip-update-kinship" type="info" place="right">
+                {Messages.TOOLTIP_GO_TO_UPDATE_kINSHIP}
+              </ReactTooltip>
             </Link>
-              <Button
-                onClick={() => props.handleDelete(relation)}
-                className="circular ui icon button"
-                color="red">
-                <i className="icon trash" />
-              </Button>
+
+            <Button
+              onClick={() => props.handleDelete(relation)}
+              className="circular ui icon button"
+              color="red"
+              data-tip=""
+              data-for="react-toooltip-delete-kinship">
+              <i className="icon trash" />
+            </Button>
+            <ReactTooltip id="react-toooltip-delete-kinship" type="error" place="right">
+              {Messages.TOOLTIP_GO_DELETE_KINSHIP}
+            </ReactTooltip>
           </div >
 
         )

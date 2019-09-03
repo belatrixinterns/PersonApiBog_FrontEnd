@@ -11,7 +11,7 @@ const ListKinshipsButton = () => {
                     className="button-size"
                     color="instagram"
                     content="List kinships"
-                    icon="sitemap"
+                    icon="list alternate outline"
                     labelPosition="left"
                     size="medium"
                     data-tip=""
