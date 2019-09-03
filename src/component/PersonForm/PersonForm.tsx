@@ -13,6 +13,7 @@ import GoBackButton from '../shared/GoBackButton';
 import MESSAGES from '../shared/Messages';
 import UpdateButtonsForm from '../shared/updateButtonsForm';
 import CreateButtonsForm from '../shared/createButtonsForm';
+import ConfirmComponent from '../shared/ConfirmComponent';
 
 const PersonForm: FunctionComponent = ({match}:any) => {
     const [localState, setLocalState] = useState({name: '',lastName: '',documentType: '',document: '', dateOfBirth: "",gender: '',nationality: '',contact: ''});
@@ -276,7 +277,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                     match.url === "/person/create" ?  <CreateButtonsForm handleSubmit={() => setOpenConfirmState(true)}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/>  : inspectButtons() )
                 }
             </form>
-            <Confirm content="are you shure ??" open={openConfirmState}  onCancel={() => handleCancelCreate()} onConfirm={(event)=>handleConfirmCreate(event)}></Confirm>
+            <ConfirmComponent confirmOpenState={openConfirmState} confirmMessageContent="Are you shure?" functionToExecuteOnConfirm={handleConfirmCreate} handleCancelEvent={handleCancelCreate} ></ConfirmComponent>
         </div> 
     );
 }
