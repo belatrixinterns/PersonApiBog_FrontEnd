@@ -272,7 +272,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/person/create" ?  <CreateButtonsForm handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/>  : inspectButtons() )
+                    match.url === "/person/create" ?  <CreateButtonsForm isPersonForm={true} handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/>  : inspectButtons() )
                 }
             </form>
         </div>

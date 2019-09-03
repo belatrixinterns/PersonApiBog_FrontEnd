@@ -193,7 +193,7 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/kinship/create" ?  <CreateButtonsForm handleSubmit={handleSubmit}/> : (match.url.includes("/kinship/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/> : inspectButtons() )
+                    match.url === "/kinship/create" ?  <CreateButtonsForm isPersonForm={false} handleSubmit={handleSubmit}/> : (match.url.includes("/kinship/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/> : inspectButtons() )
                 }   
             </form>
         </div>
