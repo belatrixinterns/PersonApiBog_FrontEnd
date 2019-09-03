@@ -2,13 +2,13 @@ import React from "react";
 import { Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
-const CreatePersonButton = () => {
+const CreateKinshipButton = () => {
     return(
-        <Link to="/person/create">
+        <Link to="/kinship/create">
             <Button
             className="redirect_create_button"
             color="green"
-            content="Create person"
+            content="Create kinship"
             icon="add"
             labelPosition="left"
             size="medium"
@@ -16,5 +16,6 @@ const CreatePersonButton = () => {
         </Link>
     );   
  }
+  
 
-  export default CreatePersonButton;
+  export default CreateKinshipButton;

@@ -21,19 +21,19 @@ const PersonForm: FunctionComponent = ({match}:any) => {
 
     const [listState, setListState] = useState({nationalityList:[{}], 
         genderList: [{key:'0', value:'0', text:'Female'}, {key:'1', value:'1', text:'Male'}],
-        documentTypeList: [{key:'1', value:'CC', text:'Citizenship Card',}, {key:'2', value:'CE', text:'Foreign Card'}, {key:'3', value:'TI', text:'Identity Card'}]});
+        documentTypeList: [{key:'1', value:'CC', text:'CC',}, {key:'2', value:'CE', text:'CE'}, {key:'3', value:'TI', text:'TI'}]});
 
     const [confirmOpen, setConfirmOpen] = useState({confirmState:false});
 
     const getFormCreateContent= () =>{ return([
         {name: "Name:", input: <Input key="name" fluid required maxLength="25" placeholder='Name' className="input-form" type="text" value={localState.name} onChange={handleNameChange} />},
         {name: "Last Name:", input: <Input key="lantName" fluid required maxLength="25" placeholder='Last Name' className="input-form" type="text" value={localState.lastName} onChange={handleLastNameChange} />},
-        {name: "Document Type:", input:<Select fluid required key="documentType" placeholder='Document Type' className="input-form" options={listState.documentTypeList} type="text" value={localState.documentType} onChange={handleDocumentTypeChange} />},
-        {name: "Document:", input:<Input key="document" fluid placeholder='Document' maxLength={localState.documentType === "CE"? 20:10} className="input-form" type="text" value={localState.document} onChange={handleDocumentChange} />},
+        {name: "Document Type:", input:<Select fluid key="documentType" placeholder='Document Type' className="input-form" options={listState.documentTypeList} type="text" value={localState.documentType} onChange={handleDocumentTypeChange} />},
+        {name: "Document:", input:<Input key="document" required fluid placeholder='Document' maxLength={localState.documentType === "CE"? 20:10} className="input-form" type="text" value={localState.document} onChange={handleDocumentChange} />},
         {name: "Date of Birth:", input: datePicker()},
         {name: "Gender:", input: <Select key="gender" fluid placeholder='Gender' className="input-form" options={listState.genderList} type="text" value={localState.gender} onChange={handleGenderChange} />},
         {name: "Nationality", input: <Select key="nationality" fluid search placeholder='Nationality' value={localState.nationality} className="input-form" options={listState.nationalityList} onChange={handleNationalityChange} />},
-        {name: "Contact:", input:<Input key="contact" fluid maxLength="30" placeholder='Contact' className="input-form" type="text" value={localState.contact} onChange={handleContactChange} />},
+        {name: "Contact:", input:<Input key="contact" required fluid maxLength="30" placeholder='Contact' className="input-form" type="text" value={localState.contact} onChange={handleContactChange} />},
     ])};
 
     useEffect(() => {
@@ -187,7 +187,22 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         const newPerson:IPerson = JSON.parse('{"id":"'+ id + '", "name":"' + localState.name + '","last_name":"'  + localState.lastName + '","date_of_birth":"'+ formatDate + '","document_type":"'+
             localState.documentType + '","document_id":"'+ localState.document +'","gender":"'+ localState.gender+ '","nationality":"'+ localState.nationality + 
             '","contact":"'+ localState.contact +'"}');
-        
+            var validation:{mssg:string, request:boolean} = contactValidation(newPerson.contact);
+
+        if(!validation.request && validation.mssg){
+            toast.error(validation.mssg);
+            return;
+        }
+        validation = nameValidation(newPerson.name, newPerson.last_name);
+        if(!validation.request && validation.mssg){
+            toast.error(validation.mssg);
+            return;
+        }
+        validation = documentValidation(newPerson.document_id, newPerson.document_type);
+        if(!validation.request && validation.mssg){
+            toast.error(validation.mssg);
+            return;
+        }
         PersonApi.updatePerson(newPerson)
         .then(()=>{
             history.goBack();
@@ -196,11 +211,9 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         .catch( (err:any) => {
             if (err.response && err.response.data.message){
                 toast.error(err.response.data.message);
-                history.goBack();
             }
             else{
                 toast.error("Error on charge person");
-                history.goBack();
             }
         });
     }
@@ -221,7 +234,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         return(
             <div>
                 <Link to={`/person/update/${id}`} replace >
-                    <Button className="submit_button" type="button" floated='right'>
+                    <Button className="submit_button update_button" type="button" floated='right'>
                         <i className="icon settings" /> Update
                     </Button>
                 </Link> 
@@ -237,7 +250,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                         setStateShowConfirmComponent(false);
                     }} 
                 />
-                 <Button className="submit_button" type="button" onClick={deleteButtonHandler} floated='right'>
+                 <Button className="submit_button delete_button" type="button" onClick={deleteButtonHandler} floated='right'>
                     <i className="icon trash" /> Delete
                 </Button>
                 <GoBackButton/>

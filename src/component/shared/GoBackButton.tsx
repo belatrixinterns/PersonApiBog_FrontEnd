@@ -12,7 +12,7 @@ const GoBackButton: React.FC = () => {
     }
 
     return(
-        <Button content="Go back" icon="arrow circle left" onClick={(e) => goBack(e)}></Button>
+        <Button className="go_back_button" content="Go back" icon="arrow circle left" onClick={(e) => goBack(e)}></Button>
     )
 }
 
