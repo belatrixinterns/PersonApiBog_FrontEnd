@@ -16,6 +16,7 @@ import CreateButtonsForm from '../shared/createButtonsForm';
 
 const PersonForm: FunctionComponent = ({match}:any) => {
     const [localState, setLocalState] = useState({name: '',lastName: '',documentType: '',document: '', dateOfBirth: "",gender: '',nationality: '',contact: ''});
+    const [openConfirmState, setOpenConfirmState] = useState(false);
 
     const history = createBrowserHistory();
 
@@ -209,6 +210,15 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         });
     }
 
+    function handleCancelCreate(){
+        setOpenConfirmState(false);
+    }
+
+    function handleConfirmCreate(event: any){
+        handleCreateButton(event);
+        setOpenConfirmState(false);
+    }
+
     
     function setStateShowConfirmComponent(state: boolean) {
         setConfirmOpen({confirmState:state})
@@ -263,10 +273,11 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/person/create" ?  <CreateButtonsForm handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/>  : inspectButtons() )
+                    match.url === "/person/create" ?  <CreateButtonsForm handleSubmit={() => setOpenConfirmState(true)}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/>  : inspectButtons() )
                 }
             </form>
-        </div>
+            <Confirm content="are you shure ??" open={openConfirmState}  onCancel={() => handleCancelCreate()} onConfirm={(event)=>handleConfirmCreate(event)}></Confirm>
+        </div> 
     );
 }
 
