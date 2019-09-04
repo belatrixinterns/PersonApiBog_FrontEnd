@@ -16,7 +16,7 @@ class TableComponent extends React.Component<ITableProps> {
     onKeyInputEnter = (filtered: string) => {
         const filters: Array<Filter> = this.props.columnsAccessor.map(currentColumn => ({ id: currentColumn, value: filtered }))
 
-        if (filtered.length == 0) {
+        if (filtered.length === 0) {
             this.setState({ filteredObject: [] }) 
         } else{
             this.setState({ filteredObject: filters })

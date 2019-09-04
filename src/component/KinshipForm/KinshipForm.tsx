@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import { Table, Select, Button } from 'semantic-ui-react';
+import { Table, Select } from 'semantic-ui-react';
 import GoBackButton from '../shared/GoBackButton';
 import PersonApi from '../../api/personApi';
 import { IKinship } from '../../interfaces/IKinship';
@@ -33,12 +33,13 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
 
     const getFormCreateContent= () =>{ return([
         {name: "Person 1:", input: <Select id="personO" fluid search placeholder='Person 1' className="input-form" value={localState.personOne} options={listState.peopleList} onChange={handlePersonOneChange}/>  },
-        {name: "Relation:", input: <Select id="kinship" fluid placeholder='Kinship' className="input-form" options={genderState.gender == ''? listKinshipType:( genderState.gender == '1'? listState.kinshipListMale:listState.kinshipListFemale)} type="text" value={localState.kinship} onChange={handleKinshipChange}/>  },
+        {name: "Relation:", input: <Select id="kinship" fluid placeholder='Kinship' className="input-form" options={genderState.gender === ''? listKinshipType:( genderState.gender === '1'? listState.kinshipListMale:listState.kinshipListFemale)} type="text" value={localState.kinship} onChange={handleKinshipChange}/>  },
         {name: "Person 2:", input: <Select id="personT" fluid search placeholder='Person 2' className="input-form" value={localState.personTwo} options={listState.peopleList} onChange={handlePersonTwoChange}/>  },
     ])};
 
     useEffect(() => {
         chargePeople();
+        charheKinship();
     },[])
 
     function chargePeople(){
@@ -84,7 +85,7 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
         }
     }
     function handlePersonOneChange(event: any, { name, value }: any) {
-        if(localState.personTwo && value == localState.personTwo){
+        if(localState.personTwo && value === localState.personTwo){
             toast.error(MESSAGES.CANT_SELECT_SAME_PERSON)
         }
         else{
@@ -98,7 +99,7 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
     }
 
     function handlePersonTwoChange(event: any, { name, value }: any) {
-        if(localState.personOne && value == localState.personOne){
+        if(localState.personOne && value === localState.personOne){
             toast.error(MESSAGES.CANT_SELECT_SAME_PERSON)
         }
         else{
