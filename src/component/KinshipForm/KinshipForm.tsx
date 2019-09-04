@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import { Table, Select } from 'semantic-ui-react';
+import { Table, Select, Grid, GridRow, GridColumn, List, ListItem } from 'semantic-ui-react';
 import GoBackButton from '../shared/GoBackButton';
 import PersonApi from '../../api/personApi';
 import { IKinship } from '../../interfaces/IKinship';
@@ -12,6 +12,8 @@ import MESSAGES from '../shared/Messages';
 import CreateButtonsForm from '../shared/createButtonsForm';
 import { IPerson } from '../../interfaces/IPerson';
 import { IPersonOnUpdate } from '../../interfaces/IPersonOnUpdate';
+import ConfirmComponent from '../shared/ConfirmComponent';
+import { IKinshipType } from '../../interfaces/IKinshipType';
 
 
 const KinshipForm : FunctionComponent = ({match}:any) => {
@@ -23,6 +25,8 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
     const [listState, setListState] = useState({peopleList: Array<IPersonOnUpdate>(), kinshipListMale: listKinshipType.filter(element => element.gender === 1 || element.gender === 2), kinshipListFemale: listKinshipType.filter(element => element.gender === 0 || element.gender === 2)});
 
     const [genderState, setGenderState] = useState({gender:""});
+
+    const [updateConfirmState, setUpdateConfirmState] = useState(false);
 
     function getGender(key:any){
         let gender:any = listState.peopleList.filter((element:any) => element.key === key);
@@ -155,6 +159,16 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
         }
     }
 
+    function updateRelationOnConfirm(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>){
+        event.preventDefault();
+        updateButtonHandler(event);
+        handleCancelUpdateRelation();
+    }
+
+    function handleCancelUpdateRelation(){
+        setUpdateConfirmState(false);
+    }
+
     function inspectButtons(){
         return(
             <div>
@@ -168,6 +182,38 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
             printTableForm()
         );
     }
+
+    const kinshipToComponent = () =>{
+        const personOne: IPersonOnUpdate | undefined = listState.peopleList.find((person: IPersonOnUpdate) => person.key == localState.personOne );
+        const personTwo: IPersonOnUpdate | undefined = listState.peopleList.find((person: IPersonOnUpdate) => person.key == localState.personTwo );
+        const kinshipType: IKinshipType | undefined = listKinshipType.find(kinshipType => kinshipType.key == localState.kinship);
+
+        return(<div className="confirmation-component">
+            <Grid>
+                <GridRow>
+                    <GridColumn>
+                        <p className="confirmation-text">Are you sure to update the current relation with the following information?</p>
+                    </GridColumn>
+                </GridRow>
+                <GridRow>
+                    <GridColumn>
+                        <List>
+                            <ListItem>
+                                <b>Person one: </b> {personOne? personOne.text: ""}
+                            </ListItem>
+                            <ListItem>
+                                <b>Relation type: </b> {kinshipType ? kinshipType.text: ""}
+                            </ListItem>
+                            <ListItem>
+                                <b>Person two: </b> {personTwo ? personTwo.text: ""}
+                            </ListItem>
+                        </List>
+                    </GridColumn>
+                </GridRow>
+            </Grid>
+        </div>);
+    }
+    
 
     function printTableForm(status?:string) {
         return getFormCreateContent().map((formElement:any)=>{
@@ -196,9 +242,10 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/kinship/create" ?  <CreateButtonsForm isPersonForm={false} handleSubmit={handleSubmit}/> : (match.url.includes("/kinship/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/> : inspectButtons() )
+                    match.url === "/kinship/create" ?  <CreateButtonsForm isPersonForm={false} handleSubmit={handleSubmit}/> : (match.url.includes("/kinship/update") ?  <UpdateButtonsForm updateButtonHandler={() => setUpdateConfirmState(true)}/> : inspectButtons() )
                 }   
             </form>
+            <ConfirmComponent confirmMessageContent={kinshipToComponent()} confirmOpenState={updateConfirmState} functionToExecuteOnConfirm={updateRelationOnConfirm} handleCancelEvent={handleCancelUpdateRelation}></ConfirmComponent>
         </div>
     );
 
