@@ -113,14 +113,18 @@ const ListKinshipComponent: React.FC<IListKinshipProps> = (props) => {
   }
 
   return (
-    <TableComponent
-      columns={columns}
-      data={props.data}
-      loading={props.loading}
-      columnsAccessor={columnsAccessor}
-      searchPlaceHolder="Search Realtionship..."
-      button={CreateKinshipButton}>
-    </TableComponent>)
+    <div>
+      <h2 className="kinship_form_container"><b>List Kinships</b></h2>
+      <TableComponent
+        columns={columns}
+        data={props.data}
+        loading={props.loading}
+        columnsAccessor={columnsAccessor}
+        searchPlaceHolder="Search Realtionship..."
+        button={CreateKinshipButton}>
+      </TableComponent>
+    </div>
+  )
 }
 
 export default ListKinshipComponent;
