@@ -1,4 +1,3 @@
-
 export const listKinshipType = [
     {key:'1', value:'1', text:'Father', gender:1}, 
     {key:'2', value:'2', text:'Mother', gender:0}, 
