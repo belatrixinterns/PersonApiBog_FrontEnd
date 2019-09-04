@@ -139,7 +139,7 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
             KinshipApi.updateKinship(newKinship)
             .then(()=>{
                 history.goBack();
-                toast.info("Person kinship succesfully");
+                toast.info("Kinship updated succesfully");
             })
             .catch( (err:any) => {
                 if (err.response && err.response.data.message){
@@ -184,7 +184,9 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
     return(
         <div className="kinship_form_container">
             <form>
-                <h2>Add Kinship</h2>
+                {
+                    match.url === "/kinship/create" ?  <h2>Add kinship</h2> : (match.url.includes("/kinship/update") ?  <h2>Modify kinship</h2> : <h2>Inspect person's kinships</h2>) 
+                }
                 <Table basic='very'>
                     <Table.Body>
                         {
