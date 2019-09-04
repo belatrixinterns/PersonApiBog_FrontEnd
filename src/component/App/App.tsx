@@ -9,6 +9,7 @@ import { Grid } from 'semantic-ui-react';
 import { ToastContainer } from "react-toastify";
 import KinshipFormPage from '../../container/KinshipFormPage/KinshipFormPage';
 import ListKinshipPage from '../../container/ListKinship/ListkinshipPage';
+import InspectKindship from '../../container/ListKinship/InspectKindshipPage';
 
 const App: React.FC = () => {
   return (
@@ -34,6 +35,7 @@ const App: React.FC = () => {
                 <Route path="/kinships" exact component={ListKinshipPage} />
                 <Route path="/kinship/create" exact component={KinshipFormPage} />
                 <Route path="/kinship/update/:id" exact component={KinshipFormPage} />
+                <Route path="/person/inspect/:id/kinships" exact component={InspectKindship} />
                 <Route component={NotFound} />
               </Switch>
             </Grid.Column>

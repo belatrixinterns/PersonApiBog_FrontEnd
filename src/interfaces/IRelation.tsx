@@ -3,5 +3,4 @@ export interface IRelation {
     idFirstPerson: Number,
     idSecondPerson: Number,
     idRelationType: Number
-
 }
