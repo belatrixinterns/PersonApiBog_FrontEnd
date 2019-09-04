@@ -137,27 +137,36 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         if(!match.url.includes("/person/create")){
             const url = (match.url.split("/"));
             const id = url[url.length - 1];
-            PersonApi.getPerson(id)
-            .then((data:any) => {
-                var splitDate = data.date_of_birth.split("-");
-                var formatDate = splitDate[2]+"-"+splitDate[1]+"-"+splitDate[0];
-                
-                while(data.nationality.split("").length < 3){
-                    data.nationality = "0" + data.nationality;
-                }
 
-                setLocalState({...localState, "name": data.name, "lastName": data.last_name, "documentType": data.document_type, "document": data.document_id, 
-                    "dateOfBirth": formatDate, "gender": data.gender, "nationality": data.nationality, "contact": data.contact});
-                }
-            )
-            .catch((err:any) => {
-                if (err.response && err.response.data.message){
-                    toast.error(err.response.data.message);
-                }
-                else{
-                    toast.error("Error on charge person");
-                }
-            });
+            if(isNaN(id)){
+                toast.info("Id not valid");
+                history.push("/persons");
+                history.go(0);
+            }
+            else{
+                PersonApi.getPerson(id)
+                .then((data:any) => {
+                    var splitDate = data.date_of_birth.split("-");
+                    var formatDate = splitDate[2]+"-"+splitDate[1]+"-"+splitDate[0];
+                
+                    while(data.nationality.split("").length < 3){
+                        data.nationality = "0" + data.nationality;
+                    }
+
+                    setLocalState({...localState, "name": data.name, "lastName": data.last_name, "documentType": data.document_type, "document": data.document_id, 
+                        "dateOfBirth": formatDate, "gender": data.gender, "nationality": data.nationality, "contact": data.contact});
+                    }
+                )
+                .catch((err:any) => {
+                    if (err.response && err.response.data.message){
+                        toast.error(err.response.data.message);
+                    }
+                    else{
+                        toast.error("Error on charge person");
+                    }
+                });
+
+            }
 
         }
     }
@@ -263,7 +272,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/person/create" ?  <CreateButtonsForm handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/>  : inspectButtons() )
+                    match.url === "/person/create" ?  <CreateButtonsForm isPersonForm={true} handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/>  : inspectButtons() )
                 }
             </form>
         </div>

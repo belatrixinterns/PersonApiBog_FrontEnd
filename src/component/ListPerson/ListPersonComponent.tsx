@@ -7,6 +7,8 @@ import { Button } from "semantic-ui-react";
 import matchSorter from 'match-sorter';
 import CreatePersonButton from "../shared/CreatePersonButton";
 import { Link } from "react-router-dom";
+import Messages from '../shared/Messages';
+import ReactTooltip from 'react-tooltip';
 
 const ListPersonComponent: React.FC<IListPersonProps> = (props) => {
 
@@ -69,34 +71,66 @@ const ListPersonComponent: React.FC<IListPersonProps> = (props) => {
       filterAll: true,
       Cell: row => {
         const person: IPerson = row.original; return (
-          <div>
+          <div >
             <Link to={`person/update/${person.id}`}>
               <Button
                 className="circular ui icon button"
                 primary
+                data-tip=""
+                data-for="react-toooltip-update-person"
               >
                 <i className="icon settings" />
               </Button>
+              <ReactTooltip id="react-toooltip-update-person" type="info" place="right">
+                {Messages.TOOLTIP_GO_UPDATE_PERSON}
+              </ReactTooltip>
             </Link>
             <Button
               onClick={() => props.handleDelete(person)}
               className="circular ui icon button"
-              color="red">
+              color="red"
+              data-tip=""
+              data-for="react-toooltip-delete-person"
+            >
               <i className="icon trash" />
             </Button>
+            <ReactTooltip id="react-toooltip-delete-person" type="error" place="right">
+              {Messages.TOOLTIP_GO_DELETE_PERSON}
+            </ReactTooltip>
             <Link to={`person/inspect/${person.id}`}>
               <Button
 
                 className="circular ui icon button"
-                color="black">
+                color="black"
+                data-tip=""
+                data-for="react-toooltip-inspect-person"
+              >
                 <i className="icon eye" />
-
               </Button>
+              <ReactTooltip id="react-toooltip-inspect-person" type="dark" place="right">
+                {Messages.TOOLTIP_GO_INSPECT_PERSON}
+              </ReactTooltip>
+            </Link>
+
+            <Link to={`person/inspect/${person.id}/kinships`}>
+              <Button
+                className="circular ui icon button"
+                color="teal"
+                data-tip=""
+                data-for="react-toooltip-inspect-person´s kainships"
+              >
+                <i className="icon users" />
+              </Button>
+              <ReactTooltip id="react-toooltip-inspect-person´s kainships" type="dark" place="right">
+                {Messages.TOOLTIP_GO_INSPECT_PERSONS_KINSHIPS}
+              </ReactTooltip>
             </Link>
           </div >
 
         )
-      },
+      }
+
+      ,
     },
   ];
 

@@ -3,6 +3,7 @@ import { Segment, Grid, GridColumn, Menu } from 'semantic-ui-react';
 import CreatePersonHomeButton, { } from "../../component/shared/CreatePersonHomeButton";
 import ListPersonButton, { } from "../../component/shared/ListPersonButton";
 import ListKinshipsButton, { } from "../../component/shared/ListKinshipsButton";
+import CreateKinshipButtonHomePage, { } from "../../component/shared/CreateKinshipButtonHomePage";
 
 const Home: React.FC<{}> = () => {
 
@@ -21,12 +22,15 @@ const Home: React.FC<{}> = () => {
                         </Segment>
                     </Grid.Column>
                     <GridColumn mobile={12} tablet={4} computer={4}>
-                        <Menu inverted  vertical size="large">
+                        <Menu inverted vertical size="large">
                             <Menu.Item>
                                 <h1>MENU</h1>
                             </Menu.Item>
                             <Menu.Item >
-                                <CreatePersonHomeButton   />
+                                <CreatePersonHomeButton  />
+                            </Menu.Item>
+                            <Menu.Item>
+                                <CreateKinshipButtonHomePage/>
                             </Menu.Item>
                             <Menu.Item>
                                 <ListPersonButton />
@@ -34,6 +38,7 @@ const Home: React.FC<{}> = () => {
                             <Menu.Item>
                                 <ListKinshipsButton />
                             </Menu.Item>
+                        
                         </Menu>
                     </GridColumn>
                 </Grid.Row>

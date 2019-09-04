@@ -4,17 +4,17 @@ import { Link } from "react-router-dom";
 import ReactTooltip from 'react-tooltip';
 import Messages from '../shared/Messages'
 
-const CreateKinshipButton = () => {
+const CreateKinshipButtonHomePage = () => {
     return (
         <div>
             <Link to="/kinship/create">
                 <Button
-                    className="redirect_create_button"
                     color="teal"
                     content="Create kinship"
                     icon="add"
                     labelPosition="left"
                     size="medium"
+                    className="button-size"
                     data-tip=""
                     data-for="react-toooltip-create-kinship"
                 />
@@ -22,9 +22,11 @@ const CreateKinshipButton = () => {
             <ReactTooltip id="react-toooltip-create-kinship" type="info" place="right">
                 {Messages.TOOLTIP_CREATE_KINSHIP}
             </ReactTooltip>
+
         </div>
+
     );
 }
 
 
-export default CreateKinshipButton;
+export default CreateKinshipButtonHomePage;

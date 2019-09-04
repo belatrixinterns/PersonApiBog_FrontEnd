@@ -16,7 +16,20 @@ const MESSAGES = {
     DELETE_KINSHIP_SUCCESSFUL: "Delete kinship successfull",
     DELETE_A_NON_EXIST_KINSHIP: "You can't delete a non existent kinship",
     KINSHIP_NOT_NULL: "Please fill all the values",
-    CANT_SELECT_SAME_PERSON: "The person selected is already choosen on this relatioship"
+    CANT_SELECT_SAME_PERSON: "The person selected is already choosen on this relatioship",
+    TOOLTIP_CREATE_PERSON:"Through this Button you can go to the CREATE Person  from.",
+    TOOLTIP_CREATE_KINSHIP:"Through this Button you can go to the CREATE kinship from.",
+    TOOLTIP_LIST_KINSHIP:"Through this Button you can go to see the all relationships",
+    TOOLTIP_LIST_PERSON:"Through this Button you can go to see the Persons.",
+    TOOLTIP_GO_BACK:"Return to previous page",
+    TOOLTIP_GO_UPDATE_PERSON:"Through this Button you can go to the UPDATE Person  from.",
+    TOOLTIP_GO_DELETE_PERSON:"Delete this person",
+    TOOLTIP_GO_DELETE_KINSHIP:"Delete this kinship",
+    TOOLTIP_GO_INSPECT_PERSON:"Through this Button you can go to the INSPECT Person  from.",
+    TOOLTIP_GO_TO_UPDATE_kINSHIP: "Through this Button you can go to the UPDATE KINSHIP  from",
+    TOOLTIP_ADD_KINSHIP:"Add new  kinship",
+    TOOLTIP_ADD_PERSON:"Add new person",
+    TOOLTIP_GO_INSPECT_PERSONS_KINSHIPS: "Through this Button you can go to see the Person's kinships."
 }
 
 export default MESSAGES;
