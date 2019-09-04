@@ -7,19 +7,17 @@ import matchSorter from 'match-sorter';
 import { Link } from "react-router-dom";
 import { IRelation } from "../../interfaces/IRelation";
 import { IListKinshipProps } from "../../interfaces/IListKindshipProps";
-import CreateKinshipButton from "../shared/CreateKinshipButton";
 import Messages from '../shared/Messages';
 import ReactTooltip from 'react-tooltip';
 
 const ListInspectKindshipComponent: React.FC<IListKinshipProps> = (props) => {
-
   let columnsAccessor: Array<string> = [
     "personOne",
     "personTwo",
     "relation"
   ]
   let columns: Array<Column<IPerson>> = [
-      {
+    {
       Header: "Full Name",
       columns: [
         {
@@ -119,7 +117,7 @@ const ListInspectKindshipComponent: React.FC<IListKinshipProps> = (props) => {
       loading={props.loading}
       columnsAccessor={columnsAccessor}
       searchPlaceHolder="Search Realtionship..."
-      button={()=>{}}>
+      button={() => { }}>
     </TableComponent>)
 }
 

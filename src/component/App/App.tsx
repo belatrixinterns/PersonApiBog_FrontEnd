@@ -35,7 +35,7 @@ const App: React.FC = () => {
                 <Route path="/kinships" exact component={ListKinshipPage} />
                 <Route path="/kinship/create" exact component={KinshipFormPage} />
                 <Route path="/kinship/update/:id" exact component={KinshipFormPage} />
-                <Route path="/person/inspect/:id/kinships" exact component={InspectKindship} />
+                <Route path="/person/inspect/kinships/:id" exact component={InspectKindship} />
                 <Route component={NotFound} />
               </Switch>
             </Grid.Column>
