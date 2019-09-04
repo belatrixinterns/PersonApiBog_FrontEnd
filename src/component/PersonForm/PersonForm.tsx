@@ -39,7 +39,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
     useEffect(() => {
         chargeCountries();
         inspect();
-    },[])
+    },)
     
     function chargeCountries(){
         fetch('https://restcountries.eu/rest/v2/all?fields=name;numericCode')
