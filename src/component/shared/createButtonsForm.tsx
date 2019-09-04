@@ -15,6 +15,7 @@ const CreateButtonsForm: FunctionComponent<updateButtonsFormProps> = (props: upd
         <div>
             {props.isPersonForm ?
                 <Button className="submit_button"
+                    type="button"
                     floated='right'
                     onClick={props.handleSubmit}
                     data-tip=""
@@ -24,6 +25,7 @@ const CreateButtonsForm: FunctionComponent<updateButtonsFormProps> = (props: upd
                     /> Add
             </Button> :
                 <Button className="submit_button"
+                    type="button"
                     floated='right'
                     onClick={props.handleSubmit}
                     data-tip=""
