@@ -334,7 +334,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/person/create" ?  <CreateButtonsForm  isPersonForm={true} handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm updateButtonHandler={() => setUpdateConfirmState(true)}/>  : inspectButtons() )
+                    match.url === "/person/create" ?  <CreateButtonsForm  isPersonForm={true} handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm isPersonForm={true} updateButtonHandler={() => setUpdateConfirmState(true)}/>  : inspectButtons() )
                 }
             </form>
             <ConfirmComponent confirmMessageContent={personToComponent()} confirmOpenState={updateConfirmState} functionToExecuteOnConfirm={updatePersonOnConfirm} handleCancelEvent={handleCancelUpdatePerson}></ConfirmComponent>

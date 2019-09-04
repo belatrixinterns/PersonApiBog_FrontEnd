@@ -242,13 +242,13 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/kinship/create" ?  <CreateButtonsForm isPersonForm={false} handleSubmit={handleSubmit}/> : (match.url.includes("/kinship/update") ?  <UpdateButtonsForm updateButtonHandler={() => setUpdateConfirmState(true)}/> : inspectButtons() )
+                    match.url === "/kinship/create" ?  <CreateButtonsForm isPersonForm={false} handleSubmit={handleSubmit}/> : (match.url.includes("/kinship/update") ?  <UpdateButtonsForm isPersonForm={false} updateButtonHandler={() => setUpdateConfirmState(true)}/> : inspectButtons() )
                 }   
             </form>
             <ConfirmComponent confirmMessageContent={kinshipToComponent()} confirmOpenState={updateConfirmState} functionToExecuteOnConfirm={updateRelationOnConfirm} handleCancelEvent={handleCancelUpdateRelation}></ConfirmComponent>
         </div>
     );
-
+   
 }
 
 export default KinshipForm;
