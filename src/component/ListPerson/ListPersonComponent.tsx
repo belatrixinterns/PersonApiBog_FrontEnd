@@ -112,7 +112,7 @@ const ListPersonComponent: React.FC<IListPersonProps> = (props) => {
               </ReactTooltip>
             </Link>
 
-            <Link to={`person/inspect/${person.id}/kinships`}>
+            <Link to={`person/inspect/kinships/${person.id}`}>
               <Button
                 className="circular ui icon button"
                 color="teal"
