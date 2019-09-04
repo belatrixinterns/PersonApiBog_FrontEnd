@@ -19,8 +19,8 @@ const UpdateButtonsForm: FunctionComponent<updateButtonsFormProps> = (props) => 
                 data-tip=""
                 data-for="react-toooltip-update-kinship"
             >
-                <i className="icon settings" /> Update
-                </Button>
+                <i className="icon settings" /> Save
+            </Button>
             <ReactTooltip id="react-toooltip-update-kinship" type="dark" place="right">
                 {Messages.TOOLTIP_GO_TO_UPDATE_kINSHIP}
             </ReactTooltip>

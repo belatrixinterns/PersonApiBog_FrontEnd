@@ -19,6 +19,9 @@ const PersonForm: FunctionComponent = ({match}:any) => {
 
     const history = createBrowserHistory();
 
+    const url = (match.url.split("/"));
+    const id = url[url.length - 1];
+
     const [listState, setListState] = useState({nationalityList:[{}], 
         genderList: [{key:'0', value:'0', text:'Female'}, {key:'1', value:'1', text:'Male'}],
         documentTypeList: [{key:'1', value:'CC', text:'CC',}, {key:'2', value:'CE', text:'CE'}, {key:'3', value:'TI', text:'TI'}]});
@@ -135,29 +138,40 @@ const PersonForm: FunctionComponent = ({match}:any) => {
 
     function inspect () { 
         if(!match.url.includes("/person/create")){
-            const url = (match.url.split("/"));
-            const id = url[url.length - 1];
-            PersonApi.getPerson(id)
-            .then((data:any) => {
-                var splitDate = data.date_of_birth.split("-");
-                var formatDate = splitDate[2]+"-"+splitDate[1]+"-"+splitDate[0];
-                
-                while(data.nationality.split("").length < 3){
-                    data.nationality = "0" + data.nationality;
-                }
 
-                setLocalState({...localState, "name": data.name, "lastName": data.last_name, "documentType": data.document_type, "document": data.document_id, 
-                    "dateOfBirth": formatDate, "gender": data.gender, "nationality": data.nationality, "contact": data.contact});
-                }
-            )
-            .catch((err:any) => {
-                if (err.response && err.response.data.message){
-                    toast.error(err.response.data.message);
-                }
-                else{
-                    toast.error("Error on charge person");
-                }
-            });
+            if(isNaN(id)){
+                toast.info("Id not valid");
+                history.push("/persons");
+                history.go(0);
+            }
+            else{
+                PersonApi.getPerson(id)
+                .then((data:any) => {
+                    var splitDate = data.date_of_birth.split("-");
+                    var formatDate = splitDate[2]+"-"+splitDate[1]+"-"+splitDate[0];
+                
+                    while(data.nationality.split("").length < 3){
+                        data.nationality = "0" + data.nationality;
+                    }
+
+                    setLocalState({...localState, "name": data.name, "lastName": data.last_name, "documentType": data.document_type, "document": data.document_id, 
+                        "dateOfBirth": formatDate, "gender": data.gender, "nationality": data.nationality, "contact": data.contact});
+                    }
+                )
+                .catch((err:any) => {
+                    if (err.response && err.response.data.message){
+                        history.push("/persons");
+                        history.go(0);
+                        toast.error(err.response.data.message);
+                    }
+                    else{
+                        history.push("/persons");
+                        history.go(0);
+                        toast.error("Error on charge person");
+                    }
+                });
+
+            }
 
         }
     }
@@ -169,9 +183,6 @@ const PersonForm: FunctionComponent = ({match}:any) => {
 
     function updateButtonHandler(event:any){
         event.preventDefault();
-
-        const url = (match.url.split("/"));
-        const id = url[url.length - 1];
 
         var splitDate = localState.dateOfBirth.split("-");
         var formatDate = splitDate[2]+"-"+splitDate[1]+"-"+splitDate[0];
@@ -202,9 +213,13 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         .catch( (err:any) => {
             if (err.response && err.response.data.message){
                 toast.error(err.response.data.message);
+                history.push("/persons");
+                history.go(0);
             }
             else{
                 toast.error("Error on charge person");
+                history.push("/persons");
+                history.go(0);
             }
         });
     }
@@ -220,15 +235,8 @@ const PersonForm: FunctionComponent = ({match}:any) => {
     }
 
     function inspectButtons(){
-        const url = (match.url.split("/"));
-        const id = url[url.length - 1];
         return(
             <div>
-                <Link to={`/person/update/${id}`} replace >
-                    <Button className="submit_button update_button" type="button" floated='right'>
-                        <i className="icon settings" /> Update
-                    </Button>
-                </Link> 
                 <Confirm
                     content={`${localState ? "Are you sure to delete " + localState.name.toLocaleUpperCase() + "?" : MESSAGES.DELETE_A_NON_EXIST_PERSON}`}
                     open={confirmOpen.confirmState}
@@ -255,6 +263,15 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                 {
                     match.url === "/person/create" ?  <h2>Add Person</h2> : (match.url.includes("/person/update") ?  <h2>Modify Person</h2> : <h2>Inspect Person</h2>) 
                 }
+                {
+                    match.url.includes("/person/inspect") ?  
+                        (<Link to={`/person/update/${id}`} replace >
+                            <Button className="submit_button update_button" type="button" floated='right'>
+                                <i className="icon settings" /> Modify
+                            </Button>
+                        </Link>) :  ""
+                }
+                
                 <Table key={"table_form"} basic='very'>
                     <Table.Body key={"table_body_form"}>
                         {

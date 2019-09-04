@@ -10,6 +10,8 @@ import UpdateButtonsForm from '../shared/updateButtonsForm';
 import { listKinshipType } from '../shared/listKinshipType';
 import MESSAGES from '../shared/Messages';
 import CreateButtonsForm from '../shared/createButtonsForm';
+import { IPerson } from '../../interfaces/IPerson';
+import { IPersonOnUpdate } from '../../interfaces/IPersonOnUpdate';
 
 
 const KinshipForm : FunctionComponent = ({match}:any) => {
@@ -18,7 +20,7 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
 
     const [localState, setLocalState] = useState({personOne:'', personTwo: '', kinship:''});
 
-    const [listState, setListState] = useState({peopleList:[{}], kinshipListMale: listKinshipType.filter(element => element.gender === 1 || element.gender === 2), kinshipListFemale: listKinshipType.filter(element => element.gender === 0 || element.gender === 2)});
+    const [listState, setListState] = useState({peopleList: Array<IPersonOnUpdate>(), kinshipListMale: listKinshipType.filter(element => element.gender === 1 || element.gender === 2), kinshipListFemale: listKinshipType.filter(element => element.gender === 0 || element.gender === 2)});
 
     const [genderState, setGenderState] = useState({gender:""});
 
@@ -38,15 +40,37 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
     useEffect(() => {
         chargePeople();
         charheKinship();
-    },)
+    },[])
 
     function chargePeople(){
         PersonApi.getPeople()
-        .then(response => {
+        .then((response: IPerson[]) => {
             setListState({...listState, 
-                "peopleList":(response.map((value:any) => {
-                    return {"text": (value.name + " " + value.last_name), "value": (value.id).toString(), "gender": (value.gender).toString() , "key": (value.id).toString()}})), 
+                "peopleList":(response.map((person: IPerson) => {
+                    return {"text": (person.name + " " + person.last_name), "value": (person.id).toString(), "gender": (person.gender).toString() , "key": (person.id).toString()}})), 
             });
+            return response;
+        })
+        .then((response: IPerson[]) => {
+             if (match.url && !match.url.includes("/kinship/create")) {
+                const url = (match.url.split("/"));
+                const id = url[url.length - 1];
+                
+                if(isNaN(id)){
+                    toast.info("Id not valid");
+                    history.push("/kinships");
+                    history.go(0);
+                }
+                else{
+                    KinshipApi.getKinship(id).then((data:IKinship)=>{
+                        setLocalState({...localState, "personOne": (data.idFirstPerson).toString() , "personTwo": (data.idSecondPerson).toString(), "kinship": (data.idRelationType).toString(), })
+                            const personSearched = response.find(person => person.id == data.idFirstPerson);
+                        if(personSearched){
+                            setGenderState({gender: personSearched.gender.toString()})
+                        }
+                    });
+                }  
+            }      
         });
     }
 
@@ -92,7 +116,7 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
             const newKinship: IKinship = JSON.parse(`{"idFirstPerson":"${localState.personOne}", "idSecondPerson":"${localState.personTwo}", "idRelationType":"${localState.kinship}"}`);
             KinshipApi.createKinship(newKinship)
             .then(()=>{
-                //history.goBack();
+                history.goBack();
                 toast.info("Kinship created succesfully");
             })
             .catch( err => {
@@ -116,7 +140,7 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
             KinshipApi.updateKinship(newKinship)
             .then(()=>{
                 history.goBack();
-                toast.info("Person kinship succesfully");
+                toast.info("Kinship updated succesfully");
             })
             .catch( (err:any) => {
                 if (err.response && err.response.data.message){
@@ -161,7 +185,9 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
     return(
         <div className="kinship_form_container">
             <form>
-                <h2>Add Kinship</h2>
+                {
+                    match.url === "/kinship/create" ?  <h2>Add kinship</h2> : (match.url.includes("/kinship/update") ?  <h2>Modify kinship</h2> : <h2>Inspect person's kinships</h2>) 
+                }
                 <Table basic='very'>
                     <Table.Body>
                         {
