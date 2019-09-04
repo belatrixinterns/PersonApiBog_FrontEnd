@@ -15,7 +15,7 @@ const UpdateButtonsForm: FunctionComponent<updateButtonsFormProps> = (props) => 
                 className="submit_button"
                 floated='right'
                 onClick={props.updateButtonHandler}
-                type="submit"
+                type="button"
                 data-tip=""
                 data-for="react-toooltip-update-kinship"
             >
