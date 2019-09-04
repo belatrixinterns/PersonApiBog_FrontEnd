@@ -28,7 +28,6 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         documentTypeList: [{key:'1', value:'CC', text:'CC',}, {key:'2', value:'CE', text:'CE'}, {key:'3', value:'TI', text:'TI'}]});
 
     const [confirmOpen, setConfirmOpen] = useState({confirmState:false});
-    const [createConfirmState, setCreateConfirmState] = useState(false);
     const [updateConfirmState, setUpdateConfirmState] = useState(false);
 
     const getFormCreateContent= () =>{ return([
