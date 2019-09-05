@@ -73,13 +73,26 @@ const KinshipForm: FunctionComponent = ({ match }: any) => {
                         KinshipApi.getKinship(id).then((data: IKinship) => {
                             setLocalState({ ...localState, "personOne": (data.idFirstPerson).toString(), "personTwo": (data.idSecondPerson).toString(), "kinship": (data.idRelationType).toString(), })
                             const personSearched = response.find(person => person.id == data.idFirstPerson);
-                            if (personSearched) {
-                                setGenderState({ gender: personSearched.gender.toString() })
-                            }
-                        });
-                    }
-                }
-            });
+
+                        if(personSearched){
+                            setGenderState({gender: personSearched.gender.toString()})
+                        }
+                    })
+                    .catch((err:any) => {
+                        if (err.response && err.response.data.message){
+                            history.push("/kinships");
+                            history.go(0);
+                            toast.error(err.response.data.message);
+                        }
+                        else{
+                            history.push("/kinships");
+                            history.go(0);
+                            toast.error("Error on charge kinship");
+                        }
+                    });
+                }  
+            }      
+        });
     }
 
     function charheKinship() {
