@@ -10,8 +10,6 @@ import { IKinship } from "../../interfaces/IKinship";
 import { IPerson } from "../../interfaces/IPerson";
 import ListPersonComponent from "../../component/ListPerson/ListPersonComponent";
 import ListInspectKindshipComponent from "../../component/ListKinship/ListInspectKindshipComponent"
-import { isExpression } from "@babel/types";
-import { IRelation } from "../../interfaces/IRelation";
 import PersonApi from "../../api/personApi";
 import { listKinshipType } from "../../component/shared/listKinshipType";
 
@@ -48,8 +46,10 @@ const InspectKindshipPage: React.FC<{}> = ({ match }: any) => {
     })
 
     KinshipApi.getKinshipsNames().then((response: IKinshipNames[]) => {
-      setKinship(response);
-      setLoading(false)
+      setLoading(true)
+      setTimeout(() => {
+        setLoading(false);
+        }, 200);
     })
   }, [])
 
