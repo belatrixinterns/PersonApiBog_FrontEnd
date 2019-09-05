@@ -288,6 +288,12 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         setStateShowConfirmComponent(true);
     }
 
+    function validateRequiredFields(){
+        const personEntries = Object.entries(localState);
+        const isValidPersonForm = personEntries.every(([personEntryKey, personEntryValue]) => personEntryValue !== "" || personEntryKey == "contact");
+        return isValidPersonForm;
+    }
+
     function inspectButtons(){
         return(
             <div>
@@ -334,7 +340,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/person/create" ?  <CreateButtonsForm  isPersonForm={true} handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm isPersonForm={true} updateButtonHandler={() => setUpdateConfirmState(true)}/>  : inspectButtons() )
+                    match.url === "/person/create" ?  <CreateButtonsForm disabled={!validateRequiredFields()} isPersonForm={true} handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm isPersonForm={true} updateButtonHandler={() => setUpdateConfirmState(true)}/>  : inspectButtons() )
                 }
             </form>
             <ConfirmComponent confirmMessageContent={personToComponent()} confirmOpenState={updateConfirmState} functionToExecuteOnConfirm={updatePersonOnConfirm} handleCancelEvent={handleCancelUpdatePerson}></ConfirmComponent>

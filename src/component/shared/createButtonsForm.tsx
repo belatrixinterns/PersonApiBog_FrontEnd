@@ -6,7 +6,8 @@ import ReactTooltip from 'react-tooltip';
 
 type updateButtonsFormProps = {
     handleSubmit: any,
-    isPersonForm: boolean
+    isPersonForm: boolean,
+    disabled? :boolean
 }
 
 const CreateButtonsForm: FunctionComponent<updateButtonsFormProps> = (props: updateButtonsFormProps) => {
@@ -15,6 +16,7 @@ const CreateButtonsForm: FunctionComponent<updateButtonsFormProps> = (props: upd
         <div>
             {props.isPersonForm ?
                 <Button className="submit_button"
+                    disabled={props.disabled? props.disabled: false}
                     type="button"
                     floated='right'
                     onClick={props.handleSubmit}
@@ -25,6 +27,7 @@ const CreateButtonsForm: FunctionComponent<updateButtonsFormProps> = (props: upd
                     /> Add
             </Button> :
                 <Button className="submit_button"
+                    disabled={props.disabled? props.disabled: false}
                     type="button"
                     floated='right'
                     onClick={props.handleSubmit}
