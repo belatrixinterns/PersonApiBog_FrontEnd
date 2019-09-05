@@ -7,4 +7,5 @@ export interface ITableProps {
     loading: boolean;
     searchPlaceHolder:string;
     button: Function;
+    defaultSearch?: number;
 }

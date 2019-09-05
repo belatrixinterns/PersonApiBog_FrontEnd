@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import {Input, Table, Button, Select, Confirm} from 'semantic-ui-react';
+import {Input, Table, Button, Select, Confirm, Grid, GridRow, GridColumn, List, ListItem} from 'semantic-ui-react';
 import {DateInput} from 'semantic-ui-calendar-react';
 import { createBrowserHistory } from 'history';
 import { toast } from 'react-toastify';
@@ -13,6 +13,7 @@ import GoBackButton from '../shared/GoBackButton';
 import MESSAGES from '../shared/Messages';
 import UpdateButtonsForm from '../shared/updateButtonsForm';
 import CreateButtonsForm from '../shared/createButtonsForm';
+import ConfirmComponent from '../shared/ConfirmComponent';
 
 const PersonForm: FunctionComponent = ({match}:any) => {
     const [localState, setLocalState] = useState({name: '',lastName: '',documentType: '',document: '', dateOfBirth: "",gender: '',nationality: '',contact: ''});
@@ -27,6 +28,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         documentTypeList: [{key:'1', value:'CC', text:'CC',}, {key:'2', value:'CE', text:'CE'}, {key:'3', value:'TI', text:'TI'}]});
 
     const [confirmOpen, setConfirmOpen] = useState({confirmState:false});
+    const [updateConfirmState, setUpdateConfirmState] = useState(false);
 
     const getFormCreateContent= () =>{ return([
         {name: "Name:", input: <Input key="name" fluid required maxLength="25" placeholder='Name' className="input-form" type="text" value={localState.name} onChange={handleNameChange} />},
@@ -224,6 +226,58 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         });
     }
 
+    function updatePersonOnConfirm(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>){
+        event.preventDefault();
+        updateButtonHandler(event);
+        handleCancelUpdatePerson();
+    }
+
+    function handleCancelUpdatePerson(){
+        setUpdateConfirmState(false);
+    }
+
+    const personToComponent = () =>{
+        const currentNationality: any = listState.nationalityList.find((nationality:any ) => nationality.value == localState.nationality);
+        return(<div className="confirmation-component">
+            <Grid>
+                <GridRow>
+                    <GridColumn>
+                        <p className="confirmation-text">Are you sure to update the current person with the following information?</p>
+                    </GridColumn>
+                </GridRow>
+                <GridRow>
+                    <GridColumn>
+                        <List>
+                            <ListItem>
+                                <b>Name: </b> {localState.name}
+                            </ListItem>
+                            <ListItem>
+                                <b>Last name: </b> {localState.lastName}
+                            </ListItem>
+                            <ListItem>
+                                <b>Document type: </b> {localState.documentType}
+                            </ListItem>
+                            <ListItem>
+                                <b>Document: </b> {localState.document}
+                            </ListItem>
+                            <ListItem>
+                                <b>Gender: </b> {localState.gender == "1" ? "Male": "Female"}
+                            </ListItem>
+                            <ListItem>
+                                <b>Date of birth: </b> {localState.dateOfBirth}
+                            </ListItem>
+                            <ListItem>
+                                <b>Nationality: </b> {currentNationality? currentNationality.text : ""}
+                            </ListItem>
+                            <ListItem>
+                                <b>Contact: </b> {localState.contact}
+                            </ListItem>
+                        </List>
+                    </GridColumn>
+                </GridRow>
+            </Grid>
+        </div>);
+    }
     
     function setStateShowConfirmComponent(state: boolean) {
         setConfirmOpen({confirmState:state})
@@ -259,7 +313,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
 
     return (
         <div className="person_form_container">
-            <form className="person_form" onSubmit={handleCreateButton}>
+            <form className="person_form">
                 {
                     match.url === "/person/create" ?  <h2>Add Person</h2> : (match.url.includes("/person/update") ?  <h2>Modify Person</h2> : <h2>Inspect Person</h2>) 
                 }
@@ -280,9 +334,10 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/person/create" ?  <CreateButtonsForm isPersonForm={true} handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm updateButtonHandler={updateButtonHandler}/>  : inspectButtons() )
+                    match.url === "/person/create" ?  <CreateButtonsForm  isPersonForm={true} handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm isPersonForm={true} updateButtonHandler={() => setUpdateConfirmState(true)}/>  : inspectButtons() )
                 }
             </form>
+            <ConfirmComponent confirmMessageContent={personToComponent()} confirmOpenState={updateConfirmState} functionToExecuteOnConfirm={updatePersonOnConfirm} handleCancelEvent={handleCancelUpdatePerson}></ConfirmComponent>
         </div>
     );
 }

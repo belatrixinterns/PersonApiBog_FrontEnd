@@ -112,7 +112,7 @@ const ListPersonComponent: React.FC<IListPersonProps> = (props) => {
               </ReactTooltip>
             </Link>
 
-            <Link to={`person/inspect/${person.id}/kinships`}>
+            <Link to={`person/inspect/kinships/${person.id}`}>
               <Button
                 className="circular ui icon button"
                 color="teal"
@@ -144,14 +144,18 @@ const ListPersonComponent: React.FC<IListPersonProps> = (props) => {
   }
 
   return (
-    <TableComponent
-      columns={columns}
-      data={props.data}
-      loading={props.loading}
-      columnsAccessor={columnsAccessor}
-      searchPlaceHolder="Search person..."
-      button={CreatePersonButton}>
-    </TableComponent>)
+    <div>
+      <h2 className="person_form_container">List Person</h2>
+      <TableComponent
+        columns={columns}
+        data={props.data}
+        loading={props.loading}
+        columnsAccessor={columnsAccessor}
+        searchPlaceHolder="Search person..."
+        button={CreatePersonButton}>
+      </TableComponent>
+    </div>
+  )
 }
 
 export default ListPersonComponent;

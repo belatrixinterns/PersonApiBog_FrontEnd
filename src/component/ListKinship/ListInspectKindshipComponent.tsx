@@ -7,13 +7,10 @@ import matchSorter from 'match-sorter';
 import { Link } from "react-router-dom";
 import { IRelation } from "../../interfaces/IRelation";
 import { IListKinshipProps } from "../../interfaces/IListKindshipProps";
-import CreateKinshipButton from "../shared/CreateKinshipButton";
 import Messages from '../shared/Messages';
 import ReactTooltip from 'react-tooltip';
 
-const ListKinshipComponent: React.FC<IListKinshipProps> = (props) => {
-
-
+const ListInspectKindshipComponent: React.FC<IListKinshipProps> = (props) => {
   let columnsAccessor: Array<string> = [
     "personOne",
     "personTwo",
@@ -112,19 +109,16 @@ const ListKinshipComponent: React.FC<IListKinshipProps> = (props) => {
     return result;
   }
 
+
   return (
-    <div>
-      <h2 className="kinship_form_container"><b>List Kinships</b></h2>
-      <TableComponent
-        columns={columns}
-        data={props.data}
-        loading={props.loading}
-        columnsAccessor={columnsAccessor}
-        searchPlaceHolder="Search Realtionship..."
-        button={CreateKinshipButton}>
-      </TableComponent>
-    </div>
-  )
+    <TableComponent
+      columns={columns}
+      data={props.data}
+      loading={props.loading}
+      columnsAccessor={columnsAccessor}
+      searchPlaceHolder="Search Realtionship..."
+      button={() => { }}>
+    </TableComponent>)
 }
 
-export default ListKinshipComponent;
+export default ListInspectKindshipComponent;
