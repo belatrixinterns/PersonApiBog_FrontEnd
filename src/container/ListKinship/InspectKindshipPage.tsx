@@ -1,17 +1,14 @@
+
 import React, { useState, useEffect } from "react";
 import { Confirm } from "semantic-ui-react";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import ListKinshipComponent from "../../component/ListKinship/ListKinshipComponent"
 import MESSAGES from "../../component/shared/Messages";
 import KinshipApi from "../../api/kinshipApi";
 import { IKinshipNames } from "../../component/shared/IKinshipNames";
 import { IKinship } from "../../interfaces/IKinship";
 import { IPerson } from "../../interfaces/IPerson";
-import ListPersonComponent from "../../component/ListPerson/ListPersonComponent";
 import ListInspectKindshipComponent from "../../component/ListKinship/ListInspectKindshipComponent"
-import { isExpression } from "@babel/types";
-import { IRelation } from "../../interfaces/IRelation";
 import PersonApi from "../../api/personApi";
 import { listKinshipType } from "../../component/shared/listKinshipType";
 
@@ -44,12 +41,8 @@ const InspectKindshipPage: React.FC<{}> = ({ match }: any) => {
           })
         }).then((kinshipWithNames: IKinshipNames[]) => {
           setKinship(kinshipWithNames)
+          setLoading(false)
         })
-    })
-
-    KinshipApi.getKinshipsNames().then((response: IKinshipNames[]) => {
-      setKinship(response);
-      setLoading(false)
     })
   }, [])
 
