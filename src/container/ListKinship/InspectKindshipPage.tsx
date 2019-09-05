@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Confirm } from "semantic-ui-react";
 import { toast } from "react-toastify";
@@ -40,14 +41,8 @@ const InspectKindshipPage: React.FC<{}> = ({ match }: any) => {
           })
         }).then((kinshipWithNames: IKinshipNames[]) => {
           setKinship(kinshipWithNames)
+          setLoading(false)
         })
-    })
-
-    KinshipApi.getKinshipsNames().then((response: IKinshipNames[]) => {
-      setLoading(true)
-      setTimeout(() => {
-        setLoading(false);
-        }, 200);
     })
   }, [])
 
