@@ -67,6 +67,18 @@ const KinshipForm : FunctionComponent = ({match}:any) => {
                         if(personSearched){
                             setGenderState({gender: personSearched.gender.toString()})
                         }
+                    })
+                    .catch((err:any) => {
+                        if (err.response && err.response.data.message){
+                            history.push("/kinships");
+                            history.go(0);
+                            toast.error(err.response.data.message);
+                        }
+                        else{
+                            history.push("/kinships");
+                            history.go(0);
+                            toast.error("Error on charge kinship");
+                        }
                     });
                 }  
             }      
