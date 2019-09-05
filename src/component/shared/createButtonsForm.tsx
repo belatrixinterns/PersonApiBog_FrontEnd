@@ -1,13 +1,14 @@
 import React, { FunctionComponent } from "react";
-import { Button } from "semantic-ui-react";
+import { Button, Popup } from "semantic-ui-react";
 import GoBackButton from "./GoBackButton";
 import Messages from '../shared/Messages';
 import ReactTooltip from 'react-tooltip';
+import PopupWhenButtonIsDisabled from "./PopupWhenButtonIsDisabled";
 
 type updateButtonsFormProps = {
     handleSubmit: any,
     isPersonForm: boolean,
-    disabled? :boolean
+    disabled :boolean
 }
 
 const CreateButtonsForm: FunctionComponent<updateButtonsFormProps> = (props: updateButtonsFormProps) => {
@@ -15,18 +16,22 @@ const CreateButtonsForm: FunctionComponent<updateButtonsFormProps> = (props: upd
     return (
         <div>
             {props.isPersonForm ?
-                <Button className="submit_button"
-                    disabled={props.disabled? props.disabled: false}
-                    type="button"
-                    floated='right'
-                    onClick={props.handleSubmit}
-                    data-tip=""
-                    data-for="react-toooltip-create-person">
-                    <i className="icon settings"
+                <PopupWhenButtonIsDisabled component={
+                    <Button className="submit_button"
+                        disabled={props.disabled? props.disabled: false}
+                        type="button"
+                        floated='right'
+                        onClick={props.handleSubmit}
+                        data-tip=""
+                        data-for="react-toooltip-create-person">
+                        <i className="icon settings"
 
-                    /> Add
-            </Button> :
-                <Button className="submit_button"
+                        /> Add
+                    </Button>
+                }></PopupWhenButtonIsDisabled>
+                :
+                <span>
+                    <Button className="submit_button"
                     disabled={props.disabled? props.disabled: false}
                     type="button"
                     floated='right'
@@ -37,6 +42,8 @@ const CreateButtonsForm: FunctionComponent<updateButtonsFormProps> = (props: upd
 
                     /> Add
             </Button>
+                </span>
+                
             }
             <ReactTooltip id="react-toooltip-create-kinship" type="success" place="right">
                 {Messages.TOOLTIP_ADD_KINSHIP}
