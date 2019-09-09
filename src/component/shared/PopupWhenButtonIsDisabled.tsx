@@ -2,7 +2,8 @@ import React from 'react';
 import { Popup } from 'semantic-ui-react';
 
 type PopupWhenButtonIsDisabledProps = {
-    component: any
+    component: any,
+    disabled: boolean
 }
 
 const PopupWhenButtonIsDisabled: React.FC<PopupWhenButtonIsDisabledProps> = (props: PopupWhenButtonIsDisabledProps) => {
@@ -13,6 +14,7 @@ const PopupWhenButtonIsDisabled: React.FC<PopupWhenButtonIsDisabledProps> = (pro
                 </div>
                 }
                 content="You cannot click this button until you fill all the required inputs."
+                disabled ={props.disabled}
             />)
 }
 

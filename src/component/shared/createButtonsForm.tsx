@@ -16,41 +16,51 @@ const CreateButtonsForm: FunctionComponent<updateButtonsFormProps> = (props: upd
     return (
         <div>
             {props.isPersonForm ?
-                <PopupWhenButtonIsDisabled component={
-                    <Button className="submit_button"
-                        disabled={props.disabled? props.disabled: false}
-                        type="button"
-                        floated='right'
-                        onClick={props.handleSubmit}
-                        data-tip=""
-                        data-for="react-toooltip-create-person">
-                        <i className="icon settings"
-
-                        /> Add
-                    </Button>
-                }></PopupWhenButtonIsDisabled>
+                <PopupWhenButtonIsDisabled 
+                    component={
+                        <div>
+                        <Button className="submit_button"
+                            disabled={props.disabled? props.disabled: false}
+                            type="button"
+                            floated='right'
+                            onClick={props.handleSubmit}
+                            data-tip=""
+                            data-for="react-toooltip-create-person">
+                                <i className="icon settings"
+                        /> 
+                            Add  
+                        </Button>
+                        <ReactTooltip id="react-toooltip-create-person" type="success" place="right">
+                            {Messages.TOOLTIP_ADD_PERSON}
+                        </ReactTooltip>
+                        </div>
+                    }
+                    disabled={ !props.disabled }
+                ></PopupWhenButtonIsDisabled>
                 :
-                <span>
-                    <Button className="submit_button"
-                    disabled={props.disabled? props.disabled: false}
-                    type="button"
-                    floated='right'
-                    onClick={props.handleSubmit}
-                    data-tip=""
-                    data-for="react-toooltip-create-kinship">
-                    <i className="icon settings"
-
-                    /> Add
-            </Button>
-                </span>
+                <PopupWhenButtonIsDisabled 
+                    component={
+                        <div>
+                        <Button className="submit_button"
+                            disabled={!props.disabled}
+                            type="button"
+                            floated='right'
+                            onClick={props.handleSubmit}
+                            data-tip=""
+                            data-for="react-toooltip-create-kinship">
+                                <i className="icon settings"
+                        />
+                            Add
+                        </Button>
+                        <ReactTooltip id="react-toooltip-create-kinship" type="success" place="right">
+                            {Messages.TOOLTIP_ADD_KINSHIP}
+                        </ReactTooltip>
+                        </div>
+                    }
+                    disabled={ props.disabled }
+                ></PopupWhenButtonIsDisabled>
                 
             }
-            <ReactTooltip id="react-toooltip-create-kinship" type="success" place="right">
-                {Messages.TOOLTIP_ADD_KINSHIP}
-            </ReactTooltip>
-            <ReactTooltip id="react-toooltip-create-person" type="success" place="right">
-                {Messages.TOOLTIP_ADD_PERSON}
-            </ReactTooltip>
             <GoBackButton />
         </div>
     );
