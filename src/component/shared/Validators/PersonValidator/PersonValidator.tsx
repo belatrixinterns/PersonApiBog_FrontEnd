@@ -1,4 +1,4 @@
-import { IPersonToShow } from "./IPersonToShow";
+import { IPersonToShow } from "../../IPersonToShow";
 import nameValidation from "./nameValidation";
 import PersonValidation from "./PersonValidation";
 import contactValidation from "./contactValidation";

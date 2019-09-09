@@ -1,5 +1,5 @@
 import moment from 'moment';
-import MESSAGES from './Messages';
+import MESSAGES from '../../Messages';
 import PersonValidation from './PersonValidation';
 
 class validateDate extends PersonValidation{

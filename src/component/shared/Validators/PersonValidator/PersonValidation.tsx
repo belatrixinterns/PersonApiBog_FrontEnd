@@ -1,4 +1,4 @@
-import { IPersonToShow } from "./IPersonToShow";
+import { IPersonToShow } from "../../IPersonToShow";
 
 abstract class PersonValidation{
     person: IPersonToShow;

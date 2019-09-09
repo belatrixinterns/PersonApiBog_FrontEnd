@@ -1,6 +1,6 @@
-import MESSAGES from './Messages';
+import MESSAGES from '../../Messages';
 import PersonValidation from './PersonValidation';
-import { IPersonToShow } from './IPersonToShow';
+import { IPersonToShow } from '../../IPersonToShow';
 
 class documentValidation extends PersonValidation{
 

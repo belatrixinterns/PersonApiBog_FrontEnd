@@ -5,9 +5,9 @@ import { createBrowserHistory } from 'history';
 import { toast } from 'react-toastify';
 import PersonApi from '../../api/personApi';
 import { IPerson } from '../../interfaces/IPerson';
-import contactValidation from '../shared/contactValidation';
-import nameValidation from '../shared/nameValidation';
-import documentValidation from '../shared/documentValidation';
+import contactValidation from '../shared/Validators/PersonValidator/contactValidation';
+import nameValidation from '../shared/Validators/PersonValidator/nameValidation';
+import documentValidation from '../shared/Validators/PersonValidator/documentValidation';
 import { Link } from 'react-router-dom';
 import GoBackButton from '../shared/GoBackButton';
 import MESSAGES from '../shared/Messages';
@@ -15,8 +15,8 @@ import UpdateButtonsForm from '../shared/updateButtonsForm';
 import CreateButtonsForm from '../shared/createButtonsForm';
 import ConfirmComponent from '../shared/ConfirmComponent';
 import { IPersonToShow } from '../shared/IPersonToShow';
-import validatePersonFunctionalities from '../shared/PersonValidator';
-import validatePersonFields from '../shared/PersonValidator';
+import validatePersonFunctionalities from '../shared/Validators/PersonValidator/PersonValidator';
+import validatePersonFields from '../shared/Validators/PersonValidator/PersonValidator';
 
 const PersonForm: FunctionComponent = ({match}:any) => {
     const [localState, setLocalState] = useState({name: '',lastName: '',documentType: '',document: '', dateOfBirth: "",gender: '',nationality: '',contact: ''});
