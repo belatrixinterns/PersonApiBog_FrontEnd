@@ -5,16 +5,18 @@ import { createBrowserHistory } from 'history';
 import { toast } from 'react-toastify';
 import PersonApi from '../../api/personApi';
 import { IPerson } from '../../interfaces/IPerson';
-import contactValidation from '../shared/contactValidation';
-import nameValidation from '../shared/nameValidation';
-import documentValidation from '../shared/documentValidation';
+import contactValidation from '../shared/Validators/PersonValidator/contactValidation';
+import nameValidation from '../shared/Validators/PersonValidator/nameValidation';
+import documentValidation from '../shared/Validators/PersonValidator/documentValidation';
 import { Link } from 'react-router-dom';
 import GoBackButton from '../shared/GoBackButton';
 import MESSAGES from '../shared/Messages';
 import UpdateButtonsForm from '../shared/updateButtonsForm';
 import CreateButtonsForm from '../shared/createButtonsForm';
 import ConfirmComponent from '../shared/ConfirmComponent';
-import dateValidation from '../shared/dateValidation';
+import { IPersonToShow } from '../shared/IPersonToShow';
+import validatePersonFunctionalities from '../shared/Validators/PersonValidator/PersonValidator';
+import validatePersonFields from '../shared/Validators/PersonValidator/PersonValidator';
 
 const PersonForm: FunctionComponent = ({match}:any) => {
     const [localState, setLocalState] = useState({name: '',lastName: '',documentType: '',document: '', dateOfBirth: "",gender: '',nationality: '',contact: ''});
@@ -88,37 +90,17 @@ const PersonForm: FunctionComponent = ({match}:any) => {
             localState.documentType + '","document_id":"'+ localState.document +'","gender":"'+ localState.gender+ '","nationality":"'+ localState.nationality + 
             '","contact":"'+ localState.contact +'"}');
 
-        var validation:{mssg:string, request:boolean} = contactValidation(newPerson.contact);
-        if(!validation.request && validation.mssg){
-            toast.error(validation.mssg);
-            return;
+        if(validatePersonFields(localState)){
+            PersonApi.createPerson(newPerson)
+            .then(()=>{
+                history.goBack();
+                toast.info("Person created succesfully");
+            })
+            .catch( err => {
+                if(err.response.data.message)
+                toast.error(err.response.data.message);
+            });
         }
-        validation = nameValidation(newPerson.name, newPerson.last_name);
-        if(!validation.request && validation.mssg){
-            toast.error(validation.mssg);
-            return;
-        }
-        validation = documentValidation(newPerson.document_id, newPerson.document_type);
-        if(!validation.request && validation.mssg){
-            toast.error(validation.mssg);
-            return;
-        }
-
-        validation = dateValidation(newPerson.date_of_birth);
-        if(!validation.request && validation.mssg){
-            toast.error(validation.mssg);
-            return;
-        }
-
-        PersonApi.createPerson(newPerson)
-        .then(()=>{
-            history.goBack();
-            toast.info("Person created succesfully");
-        })
-        .catch( err => {
-            if(err.response.data.message)
-            toast.error(err.response.data.message);
-        });
     }
 
     function datePicker(){
@@ -198,46 +180,26 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         const newPerson:IPerson = JSON.parse('{"id":"'+ id + '", "name":"' + localState.name + '","last_name":"'  + localState.lastName + '","date_of_birth":"'+ formatDate + '","document_type":"'+
             localState.documentType + '","document_id":"'+ localState.document +'","gender":"'+ localState.gender+ '","nationality":"'+ localState.nationality + 
             '","contact":"'+ localState.contact +'"}');
-            var validation:{mssg:string, request:boolean} = contactValidation(newPerson.contact);
-
-        if(!validation.request && validation.mssg){
-            toast.error(validation.mssg);
-            return;
-        }
-        validation = nameValidation(newPerson.name, newPerson.last_name);
-        if(!validation.request && validation.mssg){
-            toast.error(validation.mssg);
-            return;
-        }
-        validation = documentValidation(newPerson.document_id, newPerson.document_type);
-        if(!validation.request && validation.mssg){
-            toast.error(validation.mssg);
-            return;
-        }
-
-        validation = dateValidation(newPerson.date_of_birth);
-        if(!validation.request && validation.mssg){
-            toast.error(validation.mssg);
-            return;
-        }
         
-        PersonApi.updatePerson(newPerson)
-        .then(()=>{
-            history.goBack();
-            toast.info("Person updated succesfully");
-        })
-        .catch( (err:any) => {
-            if (err.response && err.response.data.message){
-                toast.error(err.response.data.message);
-                history.push("/persons"); history.push("/persons");
-                history.go(-1);                
-            }
-            else{
-                toast.error("Error on charge person");
-                history.push("/persons"); history.push("/persons");
-                history.go(-1);
-            }
-        });
+          if(validatePersonFields(localState)){
+              PersonApi.updatePerson(newPerson)
+              .then(()=>{
+                  history.goBack();
+                  toast.info("Person updated succesfully");
+              })
+              .catch( (err:any) => {
+                  if (err.response && err.response.data.message){
+                     toast.error(err.response.data.message);
+                     history.push("/persons"); history.push("/persons");
+                     history.go(-1);  
+                  }
+                  else{
+                      toast.error("Error on charge person");
+                      history.push("/persons"); history.push("/persons");
+                      history.go(-1);
+                  }
+              });
+          }
     }
 
     function updatePersonOnConfirm(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>){
