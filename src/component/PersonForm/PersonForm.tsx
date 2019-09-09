@@ -14,6 +14,7 @@ import MESSAGES from '../shared/Messages';
 import UpdateButtonsForm from '../shared/updateButtonsForm';
 import CreateButtonsForm from '../shared/createButtonsForm';
 import ConfirmComponent from '../shared/ConfirmComponent';
+import dateValidation from '../shared/dateValidation';
 
 const PersonForm: FunctionComponent = ({match}:any) => {
     const [localState, setLocalState] = useState({name: '',lastName: '',documentType: '',document: '', dateOfBirth: "",gender: '',nationality: '',contact: ''});
@@ -98,6 +99,12 @@ const PersonForm: FunctionComponent = ({match}:any) => {
             return;
         }
         validation = documentValidation(newPerson.document_id, newPerson.document_type);
+        if(!validation.request && validation.mssg){
+            toast.error(validation.mssg);
+            return;
+        }
+
+        validation = dateValidation(newPerson.date_of_birth);
         if(!validation.request && validation.mssg){
             toast.error(validation.mssg);
             return;
@@ -207,6 +214,13 @@ const PersonForm: FunctionComponent = ({match}:any) => {
             toast.error(validation.mssg);
             return;
         }
+
+        validation = dateValidation(newPerson.date_of_birth);
+        if(!validation.request && validation.mssg){
+            toast.error(validation.mssg);
+            return;
+        }
+        
         PersonApi.updatePerson(newPerson)
         .then(()=>{
             history.goBack();
