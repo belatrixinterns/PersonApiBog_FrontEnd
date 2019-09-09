@@ -105,7 +105,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
 
         PersonApi.createPerson(newPerson)
         .then(()=>{
-            history.goBack();
+ 
             toast.info("Person created succesfully");
         })
         .catch( err => {
