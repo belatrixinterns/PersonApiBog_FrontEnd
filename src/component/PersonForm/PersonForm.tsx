@@ -142,9 +142,9 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         if(!match.url.includes("/person/create")){
 
             if(isNaN(id)){
-                toast.info("Id not valid");
-                history.push("/persons");
-                history.go(0);
+                toast.error("Invalid Id");
+                history.push("/persons"); history.push("/persons");
+                history.go(-1);
             }
             else{
                 PersonApi.getPerson(id)
@@ -162,14 +162,14 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                 )
                 .catch((err:any) => {
                     if (err.response && err.response.data.message){
-                        history.push("/persons");
-                        history.go(0);
                         toast.error(err.response.data.message);
+                        history.push("/persons"); history.push("/persons");
+                        history.go(-1);
                     }
                     else{
-                        history.push("/persons");
-                        history.go(0);
                         toast.error("Error on charge person");
+                        history.push("/persons"); history.push("/persons");
+                        history.go(-1);
                     }
                 });
 
@@ -215,13 +215,13 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         .catch( (err:any) => {
             if (err.response && err.response.data.message){
                 toast.error(err.response.data.message);
-                history.push("/persons");
-                history.go(0);
+                history.push("/persons"); history.push("/persons");
+                history.go(-1);                
             }
             else{
                 toast.error("Error on charge person");
-                history.push("/persons");
-                history.go(0);
+                history.push("/persons"); history.push("/persons");
+                history.go(-1);
             }
         });
     }
@@ -237,7 +237,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
     }
 
     const personToComponent = () =>{
-        const currentNationality: any = listState.nationalityList.find((nationality:any ) => nationality.value == localState.nationality);
+        const currentNationality: any = listState.nationalityList.find((nationality:any ) => nationality.value === localState.nationality);
         return(<div className="confirmation-component">
             <Grid>
                 <GridRow>
@@ -261,7 +261,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                                 <b>Document: </b> {localState.document}
                             </ListItem>
                             <ListItem>
-                                <b>Gender: </b> {localState.gender == "1" ? "Male": "Female"}
+                                <b>Gender: </b> {localState.gender === "1" ? "Male": "Female"}
                             </ListItem>
                             <ListItem>
                                 <b>Date of birth: </b> {localState.dateOfBirth}
