@@ -6,7 +6,8 @@ class validateDate extends PersonValidation{
 
     validateField(){
     const date = this.person.dateOfBirth;
-    const dateToValidate = moment(date);
+    const dateToValidate = moment(date,"DD-MM-YYYY");
+    
     if(!dateToValidate.isValid()){
         return {mssg:MESSAGES.DATE_INCORRECT, request:false}; 
     }   
