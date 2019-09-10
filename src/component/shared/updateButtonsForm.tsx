@@ -1,18 +1,25 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { Button } from "semantic-ui-react";
 import GoBackButton from "./GoBackButton";
 import Messages from '../shared/Messages'
 import ReactTooltip from 'react-tooltip';
 import PopupWhenButtonIsDisabled from "./PopupWhenButtonIsDisabled";
+import ConfirmComponent from "./ConfirmComponent";
+import GoBackConfirmButton from "./GoBackConfirmButton";
+import { createBrowserHistory } from "history";
+
+const history = createBrowserHistory();
 
 type updateButtonsFormProps = {
     updateButtonHandler: any,
     isPersonForm: boolean,
-    disabled :boolean
+    disabled :boolean,
+    goBackButtonHandler: any
 }
 
 
 const UpdateButtonsForm: FunctionComponent<updateButtonsFormProps> = (props) => {
+
     return (
         <div>
             {props.isPersonForm ?
@@ -60,7 +67,8 @@ const UpdateButtonsForm: FunctionComponent<updateButtonsFormProps> = (props) => 
                     disabled={ props.disabled }
                 ></PopupWhenButtonIsDisabled>
             }
-            <GoBackButton />
+            <GoBackConfirmButton goBackButtonHandler={props.goBackButtonHandler}/>
+            
         </div>
     );
 }

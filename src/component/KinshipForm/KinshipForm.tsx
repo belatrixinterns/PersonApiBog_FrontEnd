@@ -28,6 +28,8 @@ const KinshipForm: FunctionComponent = ({ match }: any) => {
 
     const [updateConfirmState, setUpdateConfirmState] = useState(false);
 
+    const [goBackConfirmState, setGoBackConfirmState] = useState(false);
+
     function getGender(key: any) {
         let gender: any = listState.peopleList.filter((element: any) => element.key === key);
         if (gender.length > 0) {
@@ -105,6 +107,16 @@ const KinshipForm: FunctionComponent = ({ match }: any) => {
             });
         }
     }
+
+    function goBack(event: any) {
+        event.preventDefault();
+        history.goBack();
+    }
+
+    function handleCancelGoBackPerson(){
+        setGoBackConfirmState(false);
+    }
+
     function handlePersonOneChange(event: any, { name, value }: any) {
         if (localState.personTwo && value === localState.personTwo) {
             toast.error(MESSAGES.CANT_SELECT_SAME_PERSON)
@@ -266,10 +278,11 @@ const KinshipForm: FunctionComponent = ({ match }: any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/kinship/create" ? <CreateButtonsForm disabled={validateRequiredFields()} isPersonForm={false} handleSubmit={handleSubmit} /> : (match.url.includes("/kinship/update") ? <UpdateButtonsForm disabled={validateRequiredFields()} isPersonForm={false} updateButtonHandler={() => setUpdateConfirmState(true)} /> : inspectButtons())
+                    match.url === "/kinship/create" ? <CreateButtonsForm disabled={validateRequiredFields()} isPersonForm={false} handleSubmit={handleSubmit} /> : (match.url.includes("/kinship/update") ? <UpdateButtonsForm disabled={validateRequiredFields()} isPersonForm={false} updateButtonHandler={() => setUpdateConfirmState(true)} goBackButtonHandler={() => setGoBackConfirmState(true)}/> : inspectButtons())
                 }  
             </form>
             <ConfirmComponent confirmMessageContent={kinshipToComponent()} confirmOpenState={updateConfirmState} functionToExecuteOnConfirm={updateRelationOnConfirm} handleCancelEvent={handleCancelUpdateRelation}></ConfirmComponent>
+            <ConfirmComponent confirmMessageContent={"¿Desea salir sin completar los cambios?"} confirmOpenState={goBackConfirmState} functionToExecuteOnConfirm={goBack} handleCancelEvent={handleCancelGoBackPerson}></ConfirmComponent>
         </div>
     );
 
