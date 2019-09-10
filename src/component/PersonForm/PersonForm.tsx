@@ -1,22 +1,20 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import {Input, Table, Button, Select, Confirm, Grid, GridRow, GridColumn, List, ListItem} from 'semantic-ui-react';
+import {Input, Table, Button, Select, Confirm, Grid, GridRow, GridColumn, List, ListItem, Dropdown} from 'semantic-ui-react';
 import {DateInput} from 'semantic-ui-calendar-react';
 import { createBrowserHistory } from 'history';
 import { toast } from 'react-toastify';
 import PersonApi from '../../api/personApi';
 import { IPerson } from '../../interfaces/IPerson';
-import contactValidation from '../shared/Validators/PersonValidator/contactValidation';
-import nameValidation from '../shared/Validators/PersonValidator/nameValidation';
-import documentValidation from '../shared/Validators/PersonValidator/documentValidation';
 import { Link } from 'react-router-dom';
 import GoBackButton from '../shared/GoBackButton';
 import MESSAGES from '../shared/Messages';
 import UpdateButtonsForm from '../shared/updateButtonsForm';
 import CreateButtonsForm from '../shared/createButtonsForm';
 import ConfirmComponent from '../shared/ConfirmComponent';
-import { IPersonToShow } from '../shared/IPersonToShow';
-import validatePersonFunctionalities from '../shared/Validators/PersonValidator/PersonValidator';
 import validatePersonFields from '../shared/Validators/PersonValidator/PersonValidator';
+import AsyncPaginate from "react-select-async-paginate";
+import { INationality } from '../shared/INationality';
+
 
 const PersonForm: FunctionComponent = ({match}:any) => {
     const [localState, setLocalState] = useState({name: '',lastName: '',documentType: '',document: '', dateOfBirth: "",gender: '',nationality: '',contact: ''});
@@ -26,13 +24,36 @@ const PersonForm: FunctionComponent = ({match}:any) => {
     const url = (match.url.split("/"));
     const id = url[url.length - 1];
 
-    const [listState, setListState] = useState({nationalityList:[{}], 
+    const [listState, setListState] = useState({nationalityList: Array<INationality>(), 
         genderList: [{key:'0', value:'0', text:'Female'}, {key:'1', value:'1', text:'Male'}],
         documentTypeList: [{key:'1', value:'CC', text:'CC',}, {key:'2', value:'CE', text:'CE'}, {key:'3', value:'TI', text:'TI'}]});
 
     const [confirmOpen, setConfirmOpen] = useState({confirmState:false});
     const [updateConfirmState, setUpdateConfirmState] = useState(false);
 
+    const loadOptions = async (search: any, prevOptions: INationality[]) => {
+      
+        let filteredOptions;
+        if (!search) {
+          filteredOptions = listState.nationalityList;
+        } else {
+          const searchLower = search.toLowerCase();
+      
+          filteredOptions = listState.nationalityList.filter( (nationality: INationality) => nationality.text.toLowerCase().includes(searchLower));
+        }
+      
+        const hasMore = filteredOptions.length > prevOptions.length + 10;
+        const slicedOptions = filteredOptions.slice(
+          prevOptions.length,
+          prevOptions.length + 10
+        );
+      
+        return {
+          options: slicedOptions,
+          hasMore
+        };
+      };
+    
     const getFormCreateContent= () =>{ return([
         {name: "Name:", input: <Input key="name" fluid required maxLength="25" placeholder='Name' className="input-form" type="text" value={localState.name} onChange={handleNameChange} />},
         {name: "Last Name:", input: <Input key="lantName" fluid required maxLength="25" placeholder='Last Name' className="input-form" type="text" value={localState.lastName} onChange={handleLastNameChange} />},
@@ -40,7 +61,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         {name: "Document:", input:<Input key="document" required fluid placeholder='Document' maxLength={localState.documentType === "CE"? 20:10} className="input-form" type="text" value={localState.document} onChange={handleDocumentChange} />},
         {name: "Date of Birth:", input: datePicker()},
         {name: "Gender:", input: <Select key="gender" fluid placeholder='Gender' className="input-form" options={listState.genderList} type="text" value={localState.gender} onChange={handleGenderChange} />},
-        {name: "Nationality", input: <Select key="nationality" fluid search placeholder='Nationality' value={localState.nationality} className="input-form" options={listState.nationalityList} onChange={handleNationalityChange} />},
+        {name: "Nationality", input: <AsyncPaginate value={listState.nationalityList.find((nationality: INationality) => nationality.value === localState.nationality)} loadOptions={loadOptions} onChange={handleNationalityChange} />},
         {name: "Contact:", input:<Input key="contact" required fluid maxLength="30" placeholder='Contact' className="input-form" type="text" value={localState.contact} onChange={handleContactChange} />},
     ])};
 
@@ -49,11 +70,12 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         inspect();
     },[])
     
+    
     function chargeCountries(){
         fetch('https://restcountries.eu/rest/v2/all?fields=name;numericCode')
         .then(response => response.json())
         .then(json => setListState({...listState, "nationalityList":(json.map((value:any) => {
-            return {"text": value.name, "value": (value.numericCode + ""), "key": (value.numericCode + "")}
+            return {"text": value.name, "value": (value.numericCode + ""), "key": (value.numericCode + ""), "label" : value.name}
          }))}));
     }
 
@@ -75,8 +97,9 @@ const PersonForm: FunctionComponent = ({match}:any) => {
     function handleGenderChange(event: any, { name, value }: any) {
         setLocalState({ ...localState, gender: value });
     }
-    function handleNationalityChange(event: any, { name, value }: any) {
-        setLocalState({ ...localState, nationality: value });
+    function handleNationalityChange(data: INationality) {
+        setLocalState({ ...localState, nationality: data.value });
+        
     }
     function handleContactChange (event:any, {name, value}:any) {
         setLocalState({...localState,contact: value});
@@ -147,8 +170,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
 
                     setLocalState({...localState, "name": data.name, "lastName": data.last_name, "documentType": data.document_type, "document": data.document_id, 
                         "dateOfBirth": formatDate, "gender": data.gender, "nationality": data.nationality, "contact": data.contact});
-                    }
-                )
+                    }                )
                 .catch((err:any) => {
                     if (err.response && err.response.data.message){
                         history.push("/persons");
