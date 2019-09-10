@@ -61,7 +61,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         {name: "Document:", input:<Input key="document" required fluid placeholder='Document' maxLength={localState.documentType === "CE"? 20:10} className="input-form" type="text" value={localState.document} onChange={handleDocumentChange} />},
         {name: "Date of Birth:", input: datePicker()},
         {name: "Gender:", input: <Select key="gender" fluid placeholder='Gender' className="input-form" options={listState.genderList} type="text" value={localState.gender} onChange={handleGenderChange} />},
-        {name: "Nationality", input: <AsyncPaginate value={listState.nationalityList.find((nationality: INationality) => nationality.value === localState.nationality)} loadOptions={loadOptions} onChange={handleNationalityChange} />},
+        {name: "Nationality", input: <AsyncPaginate  placeholder="Nationality" value={listState.nationalityList.find((nationality: INationality) => nationality.value === localState.nationality)} loadOptions={loadOptions} onChange={handleNationalityChange} />},
         {name: "Contact:", input:<Input key="contact" required fluid maxLength="30" placeholder='Contact' className="input-form" type="text" value={localState.contact} onChange={handleContactChange} />},
     ])};
 
