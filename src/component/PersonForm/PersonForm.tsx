@@ -29,7 +29,11 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         documentTypeList: [{key:'1', value:'CC', text:'CC',}, {key:'2', value:'CE', text:'CE'}, {key:'3', value:'TI', text:'TI'}]});
 
     const [confirmOpen, setConfirmOpen] = useState({confirmState:false});
+
     const [updateConfirmState, setUpdateConfirmState] = useState(false);
+  
+    const [goBackConfirmState, setGoBackConfirmState] = useState(false);
+
 
     const loadOptions = async (search: any, prevOptions: INationality[]) => {
       
@@ -63,6 +67,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         {name: "Gender:", input: <Select key="gender" fluid placeholder='Gender' className="input-form" options={listState.genderList} type="text" value={localState.gender} onChange={handleGenderChange} />},
         {name: "Nationality", input: <AsyncPaginate  placeholder="Nationality" value={listState.nationalityList.find((nationality: INationality) => nationality.value === localState.nationality)} loadOptions={loadOptions} onChange={handleNationalityChange} />},
         {name: "Contact:", input:<Input key="contact" required fluid maxLength="30" placeholder='Contact' className="input-form" type="text" value={localState.contact} onChange={handleContactChange} />},
+
     ])};
 
     useEffect(() => {
@@ -103,6 +108,15 @@ const PersonForm: FunctionComponent = ({match}:any) => {
     }
     function handleContactChange (event:any, {name, value}:any) {
         setLocalState({...localState,contact: value});
+    }
+
+    function goBack(event: any) {
+        event.preventDefault();
+        history.goBack();
+    }
+
+    function handleCancelGoBackPerson(){
+        setGoBackConfirmState(false);
     }
 
     function handleCreateButton(event: any) {
@@ -234,6 +248,14 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         setUpdateConfirmState(false);
     }
 
+    const goBackToComponent = () => {
+        return(
+            <div className="confirmation-component">
+                <p className="confirmation-text">¿Desea salir sin completar los cambios?</p>
+            </div>
+        );
+    }
+
     const personToComponent = () =>{
         const currentNationality: any = listState.nationalityList.find((nationality:any ) => nationality.value === localState.nationality);
         return(<div className="confirmation-component">
@@ -310,7 +332,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                  <Button className="submit_button delete_button" type="button" onClick={deleteButtonHandler} floated='right'>
                     <i className="icon trash" /> Delete
                 </Button>
-                <GoBackButton/>
+                <GoBackButton />
             </div>
         );
     }
@@ -338,11 +360,12 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/person/create" ?  <CreateButtonsForm disabled={!validateRequiredFields()} isPersonForm={true} handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm disabled={!validateRequiredFields()} isPersonForm={true} updateButtonHandler={() => setUpdateConfirmState(true)}/>  : inspectButtons() )
+                    match.url === "/person/create" ?  <CreateButtonsForm disabled={!validateRequiredFields()} isPersonForm={true} handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm disabled={!validateRequiredFields()} isPersonForm={true} updateButtonHandler={() => setUpdateConfirmState(true)} goBackButtonHandler={() => setGoBackConfirmState(true)}/>  : inspectButtons() )
                 }
             </form>
             <ConfirmComponent confirmMessageContent={personToComponent()} confirmOpenState={updateConfirmState} functionToExecuteOnConfirm={updatePersonOnConfirm} handleCancelEvent={handleCancelUpdatePerson}></ConfirmComponent>
-        </div>
+            <ConfirmComponent confirmMessageContent={goBackToComponent()} confirmOpenState={goBackConfirmState} functionToExecuteOnConfirm={goBack} handleCancelEvent={handleCancelGoBackPerson}></ConfirmComponent>
+        </div>    
     );
 }
 
