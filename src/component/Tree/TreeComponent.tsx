@@ -1,298 +1,56 @@
-import React, { Children } from 'react';
-import Tree from "react-d3-tree";
-import clone from "clone";
+import React, { useEffect } from 'react';
+import Tree from 'react-d3-tree';
 
-const myTreeData = {
+const familyTree: React.FC = () => {
+    const greenNode =  {shape: 'rect',shapeProps: {width: 20, height: 20, fill: 'green', x: -10, y: -10}}; 
+    const redNode = { shape: 'circle', shapeProps: { r:15, x: -10, y: -10, fill: 'red'}};
+    const blueNode = { shape: 'rect', shapeProps: { width: 20, height: 20, x: -10, y: -10, fill: 'blue'}};
+    const greyNode = {shape: 'circle',shapeProps: {r: 15, x: -10, y: -10, fill: 'grey'}};
+    const purpleNode ={shape: 'rect', shapeProps:  { width: 20, height: 20, x: -10, y: -10, fill: 'purple'}};
 
-    name: 'Person\n Maggie',
-
-    nodeSvgShape: {
-        shape: 'rect',
-        shapeProps: {
-            width: 20,
-            height: 20,
-            fill: 'green',
-            x: -10,
-            y: -10
-        },
-    },
-    children: [
-        {
-            name: 'spouse',
-            nodeSvgShape: {
-                shape: 'circle',
-                shapeProps: {
-                    r: 20,
-                    x: -10,
-                    y: -10,
-                    fill: 'red',
-                },
-            },
-            children: [{
-                name: 'no tiene',
-                nodeSvgShape: {
-                    shape: 'rect',
-                    shapeProps: {
-                        width: 20,
-                        height: 20,
-                        x: -10,
-                        y: -10,
-                        fill: 'blue',
-                    }
-                },
-            }]
-        },
-        {
-            name: 'hermanos',
-            nodeSvgShape: {
-                shape: 'circle',
-                shapeProps: {
-                    r: 20,
-                    x: -10,
-                    y: -10,
-                    fill: 'red',
-                },
-            },
-
-            children: [
-                {
-                    name: 'bart',
-
-                    nodeSvgShape: {
-                        shape: 'rect',
-                        shapeProps: {
-                            width: 20,
-                            height: 20,
-                            x: -10,
-                            y: -10,
-                            fill: 'blue',
-                        }
-                    }
-                },
-                {
-                    name: 'lisa',
-                    nodeSvgShape: {
-                        shape: 'rect',
-                        shapeProps: {
-                            width: 20,
-                            height: 20,
-                            x: -10,
-                            y: -10,
-                            fill: 'blue',
-                        }
-                    }
-                }
-            ],
-
-
-        },
-        {
-            name: 'padres',
-            nodeSvgShape: {
-                shape: 'circle',
-                shapeProps: {
-                    r: 20,
-                    x: -10,
-                    y: -10,
-                    fill: 'red',
-                },
-            },
-
-            children: [
-                {
-                    name: 'Margge',
-                    attributes: {
-
-                    },
-                    nodeSvgShape: {
-                        shape: 'rect',
-                        shapeProps: {
-                            width: 20,
-                            height: 20,
-                            x: -10,
-                            y: -10,
-                            fill: 'blue',
-                        }
-                    },
-                    children: [
-                        {
-                            name: 'abuelos',
-                            nodeSvgShape: {
-                                shape: 'circle',
-                                shapeProps: {
-                                    r: 20,
-                                    x: -10,
-                                    y: -10,
-                                    fill: 'grey',
-                                },
-                            },
-                            children: [
-                                {
-                                    name: 'Clancy',
-                                    nodeSvgShape: {
-                                        shape: 'rect',
-                                        shapeProps: {
-                                            width: 20,
-                                            height: 20,
-                                            x: -10,
-                                            y: -10,
-                                            fill: 'purple',
-                                        },
-                                    },
-
-                                },
-                                {
-                                    name: 'Jackeline',
-                                    nodeSvgShape: {
-                                        shape: 'rect',
-                                        shapeProps: {
-                                            width: 20,
-                                            height: 20,
-                                            x: -10,
-                                            y: -10,
-                                            fill: 'purple',
-                                        },
-                                    },
-
-                                },
-
-                            ],
-
-                        },
-                    ],
-
-                },
-                {
-                    name: 'Homer',
-                    attributes: {
-
-                    },
-                    nodeSvgShape: {
-                        shape: 'rect',
-                        shapeProps: {
-                            width: 20,
-                            height: 20,
-                            x: -10,
-                            y: -10,
-                            fill: 'blue',
-                        }
-                    },
-                    children: [
-                        {
-                            name: 'abuelos',
-                            nodeSvgShape: {
-                                shape: 'circle',
-                                shapeProps: {
-                                    r: 20,
-                                    x: -10,
-                                    y: -10,
-                                    fill: 'grey',
-                                },
-                            },
-                            children: [
-                                {
-                                    name: 'Mona',
-                                    nodeSvgShape: {
-                                        shape: 'rect',
-                                        shapeProps: {
-                                            width: 20,
-                                            height: 20,
-                                            x: -10,
-                                            y: -10,
-                                            fill: 'purple',
-                                        },
-                                    },
-
-                                },
-                                {
-                                    name: 'Abraham',
-                                    nodeSvgShape: {
-                                        shape: 'rect',
-                                        shapeProps: {
-                                            width: 20,
-                                            height: 20,
-                                            x: -10,
-                                            y: -10,
-                                            fill: 'purple',
-                                        },
-                                    },
-
-                                },
-
-                            ],
-
-                        },
-                    ],
-                },
-
-            ],
-
-
-        },
-
-
-
-    ],
-
-};
-
-const containerStyles = {
-    width: "100%",
-    height: "100vh"
-};
-
-export default class CenteredTree extends React.PureComponent {
-    state = {
-        data: myTreeData
-    };
-
-    injectedNodesCount = 0;
-
-    addChildNode = () => {
-        const nextData = clone(this.state.data);
-        const target = nextData.children[1].children;
-        this.injectedNodesCount++;
-        target.push({
-            name: `Inserted Node ${this.injectedNodesCount}`,
-            id: `inserted-node-${this.injectedNodesCount}`
-        });
-        this.setState({
-            data: nextData
-        });
-    };
-
-    removeChildNode = () => {
-        const nextData = clone(this.state.data);
-        const target = nextData.children;
-        target.pop();
-        this.injectedNodesCount--;
-        this.setState({
-            data: nextData
-        });
-    };
-
-    componentDidMount() {
-        // Get treeContainer's dimensions so we can center the tree
-        const dimensions = treeContainer.getBoundingClientRect();
-        this.setState({
-            translate: {
-                x: dimensions.width / 10,
-                y: dimensions.height / 10
-            }
-        });
-    }
-
-    render() {
+    function myTreeData (){
         return (
-            <div style={containerStyles} ref={tc => (this.treeContainer = tc)}>
-                <button onClick={this.addChildNode}>Add Node</button>
-                <button onClick={this.removeChildNode}>Remove Node</button>
-                <Tree
-                    data={this.state.data}
-                    translate={this.state.translate}
-                    orientation={"vertical"}
-                />
-            </div>
+            {
+                name: 'Person',
+                nodeSvgShape: greenNode,
+                children: [            
+                    {name: 'Spouse',nodeSvgShape:redNode,children:[{name:'NAN',nodeSvgShape: blueNode}]},
+                    {name: 'Brothers/Sisters',nodeSvgShape: redNode,children: [{name:'NAN',nodeSvgShape: blueNode}]},
+                    {name: 'Parents',nodeSvgShape: redNode,children: [
+                            {
+                                name: 'Mother',
+                                nodeSvgShape: blueNode,
+                                children: [{name: 'grandparents',nodeSvgShape: greyNode,children: [{name: 'GrandFather',nodeSvgShape: purpleNode},{name: 'GrandMother',nodeSvgShape: purpleNode}]}]
+                            },
+                            {
+                                name: 'Father',
+                                nodeSvgShape: blueNode,
+                                children: [{name: 'grandparents',nodeSvgShape: greyNode,children: [{name: 'GrandFather',nodeSvgShape: purpleNode},{name: 'GrandMother',nodeSvgShape: purpleNode}]}]
+                            }
+                        ],
+                    }
+                ]
+            }
         );
     }
+
+    var injectedNodesCount = 0;
+    const relationId:any = {"Spose":0, "father":2, "mother":2, "brother":1, "sister":1, "GrandMother":5, "GrandFather":5 };
+
+    function loadPersonRelations (relation:string) {
+        const nextData:any = myTreeData();
+        const target = nextData.children[0].children;
+        injectedNodesCount++;
+        target.push({
+            name: `Inserted Node ${injectedNodesCount}`,
+            id: `inserted-node-${injectedNodesCount}`
+        });
+        return nextData;
+    }
+    
+    return (
+        <Tree data={loadPersonRelations("brother")} />
+    );
+    
 }
+export default familyTree;
