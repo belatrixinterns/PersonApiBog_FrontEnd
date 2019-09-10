@@ -43,7 +43,7 @@ const TreePage: React.FC<{}> = ({ match }: any) => {
     }, [])
 
     return (
-        console.log(relationship),
+       // console.log(relationship),
         
         <TreeComponent data={relationship} />
     )

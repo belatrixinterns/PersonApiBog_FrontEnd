@@ -3,25 +3,18 @@ import Tree from 'react-d3-tree';
 import { IKinshipNames } from '../shared/IKinshipNames';
 
 type typeData = {
-    data:any
+    data: Array<IKinshipNames>
 }
 
-const familyTree: React.FC <typeData>= () => {
-    const listRelation: Array<IKinshipNames> = [];
+const familyTree: React.FC <typeData>= (props) => {
+    const listRelation: Array<IKinshipNames> = props.data;
     const greenNode =  {shape: 'rect',shapeProps: {width: 20, height: 20, fill: 'green', x: -10, y: -10}}; 
     const redNode = { shape: 'circle', shapeProps: { r:15, x: -10, y: -10, fill: 'red'}};
     const blueNode = { shape: 'rect', shapeProps: { width: 20, height: 20, x: -10, y: -10, fill: 'blue'}};
     const greyNode = {shape: 'circle',shapeProps: {r: 15, x: -10, y: -10, fill: 'grey'}};
     const purpleNode ={shape: 'rect', shapeProps:  { width: 20, height: 20, x: -10, y: -10, fill: 'purple'}};
 
-    for(var person of listRelation){
-       let nameOne= person.personOne;
-        let nameTwo=person.personTwo;
-        console.log(nameOne);
-        console.log(nameTwo);
-        
-        
-    }
+    
 
     function myTreeData (){
         return (
@@ -50,13 +43,16 @@ const familyTree: React.FC <typeData>= () => {
         );
     }
     
-    
+    listRelation.forEach(person => {
+        console.log(person)
+    });
     var injectedNodesCount = 0;
     
 
     const relationId:any = {"Spose":0, "father":2, "mother":2, "brother":1, "sister":1, "GrandMother":5, "GrandFather":5 };
 
     function loadPersonRelations (relation:string) {
+        
         const nextData:any = myTreeData();
         const target = nextData.children[0].children;
         injectedNodesCount++;
