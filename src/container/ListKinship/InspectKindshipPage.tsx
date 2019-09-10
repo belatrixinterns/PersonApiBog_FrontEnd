@@ -11,8 +11,12 @@ import { IPerson } from "../../interfaces/IPerson";
 import ListInspectKindshipComponent from "../../component/ListKinship/ListInspectKindshipComponent"
 import PersonApi from "../../api/personApi";
 import { listKinshipType } from "../../component/shared/listKinshipType";
+import { createBrowserHistory } from "history";
 
 const InspectKindshipPage: React.FC<{}> = ({ match }: any) => {
+
+  const history = createBrowserHistory();
+
   const [relationship, setKinship] = useState(Array<IKinshipNames>());
   const [kinshipSelected, setKinshipSelected] = useState<IKinshipNames>();
   const [loading, setLoading] = useState(true);
@@ -21,10 +25,35 @@ const InspectKindshipPage: React.FC<{}> = ({ match }: any) => {
   const id = url[url.length - 1];
 
   useEffect(() => {
+    if(isNaN(id)){
+      toast.error("Invalid Id");
+      history.push("/persons"); history.push("/persons");
+      history.go(-1);
+    }else{
+      PersonApi.getPerson(id)
+      .then(()=>{
+        return ejecution();
+      }).catch(()=>{
+        toast.error("Id not found. Please try another user.");
+        history.push("/persons"); history.push("/persons");
+        history.go(-1);
+      });
+    }
+  }, [])
+
+  function ejecution(){
     const idPerson = parseInt(id);
     PersonApi.getPeople().then((people: IPerson[]) => {
       KinshipApi.getKinships().then((kinships: IKinship[]) => {
-        return kinships.filter((kinship: IKinship) => kinship.idFirstPerson === idPerson || kinship.idSecondPerson === idPerson)
+        let newKinship = kinships.filter((kinship: IKinship) => kinship.idFirstPerson === idPerson || kinship.idSecondPerson === idPerson);
+        console.log(newKinship);
+        
+        if(newKinship.length === 0){
+          toast.error("This user doesn't have kinships");
+          history.push("/persons"); history.push("/persons");
+          history.go(-1);
+        }
+        return newKinship;
       })
         .then((kinshipsFiltered: IKinship[]) => {
           return kinshipsFiltered.map((kinshipFiltered: IKinship) => {
@@ -39,12 +68,14 @@ const InspectKindshipPage: React.FC<{}> = ({ match }: any) => {
             }
             return kinshipWithNames;
           })
-        }).then((kinshipWithNames: IKinshipNames[]) => {
+        })
+        .then((kinshipWithNames: IKinshipNames[]) => {
           setKinship(kinshipWithNames)
           setLoading(false)
-        })
+        })  
     })
-  }, [])
+  
+  }    
 
   function setStateShowConfirmComponent(state: boolean) {
     setConfirmOpen(state)
