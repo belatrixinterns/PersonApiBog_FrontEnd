@@ -5,12 +5,12 @@ import { any } from 'prop-types';
 import { IPerson } from '../../interfaces/IPerson';
 
 type typeData = {
-    data: Array<IKinshipNames>,
+    listKinshipNames: Array<IKinshipNames>,
     person: IPerson
 }
 
 const familyTree: React.FC<typeData> = (props) => {
-    const listRelation: Array<IKinshipNames> = props.data;
+    const listRelation: Array<IKinshipNames> = props.listKinshipNames;
     const greenNode = { shape: 'rect', shapeProps: { width: 20, height: 20, fill: 'green', x: -10, y: -10 } };
     const redNode = { shape: 'circle', shapeProps: { r: 15, x: -10, y: -10, fill: 'red' } };
     const blueNode = { shape: 'rect', shapeProps: { width: 20, height: 20, x: -10, y: -10, fill: 'blue' } };
@@ -49,22 +49,46 @@ const familyTree: React.FC<typeData> = (props) => {
     var injectedNodesCount = 0;
 
 
-    const relationId: any = { "Spose": 0, "father": 2, "mother": 2, "brother": 1, "sister": 1, "GrandMother": 5, "GrandFather": 5 };
+    const relationId: any = { "Spouse": 0, "Parents": 2, "Siblings": 1, "GrandParents": 5 };
 
-    function loadPersonRelations(relation: string) {
+    function loadPersonRelations() {
+        const dataTree: any = myTreeData();
+        const personFullName = props.person ? `${props.person.name} ${props.person.last_name}`: "Not found person";
 
-        const nextData: any = myTreeData();
-        const target = nextData.children[0].children;
-        injectedNodesCount++;
-        target.push({
-            name: `Inserted Node ${injectedNodesCount}`,
-            id: `inserted-node-${injectedNodesCount}`
+        props.listKinshipNames.forEach(kinshipName => {
+            
+            if(kinshipName.relation === "Spouse"){
+                let targetSpouse: any = dataTree.children[relationId["Spouse"]].children[0];
+                targetSpouse.name = kinshipName.personOne === personFullName ? kinshipName.personTwo: kinshipName.personOne;
+            }
+
+            if(kinshipName.relation === "Brother" || kinshipName.relation === "Sister" ){
+                let rootBrother: Array<any> =  dataTree.children[relationId["Siblings"]].children
+                if(rootBrother[0] && rootBrother[0].name === "NAN"){
+                    rootBrother.shift();
+                }
+                rootBrother.push({
+                    name: kinshipName.personOne === personFullName ? kinshipName.personTwo: kinshipName.personOne,
+                    id: kinshipName.id,
+                    nodeSvgShape: blueNode,
+                })
+            }
+
+            if(kinshipName.relation === "Father"){
+                let targetParent: any = dataTree.children[relationId["Parents"]].children;
+                if(targetParent[0] && targetParent[0].name === "NAN"){
+                    targetParent.shift();
+                }
+                targetParent.name = kinshipName.personOne === personFullName ? kinshipName.personTwo: kinshipName.personOne;
+            }
+
+
         });
-        return nextData;
+      return dataTree;
     }
 
     return (
-        <Tree data={loadPersonRelations("brother")} />
+        <Tree data={loadPersonRelations()} />
     );
 
 }

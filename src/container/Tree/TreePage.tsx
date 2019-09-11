@@ -45,7 +45,7 @@ const TreePage: React.FC<{}> = ({ match }: any) => {
     }, [])
 
     return (   
-        <TreeComponent person={person} data={relationship} />
+        <TreeComponent person={person} listKinshipNames={relationship}/>
     )
 }
 
