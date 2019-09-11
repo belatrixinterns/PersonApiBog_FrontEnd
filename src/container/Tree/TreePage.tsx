@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
 import TreeComponent from '../../component/Tree/TreeComponent';
-import { match } from 'react-router-dom';
 import { IKinshipNames } from '../../component/shared/IKinshipNames';
 import PersonApi from '../../api/personApi';
 import { IPerson } from '../../interfaces/IPerson';
@@ -11,12 +10,15 @@ import { listKinshipType } from '../../component/shared/listKinshipType';
 
 const TreePage: React.FC<{}> = ({ match }: any) => {
     const [relationship, setRelationship] = useState(Array<IKinshipNames>());
+    const [person, setPerson] = useState();
     const url = (match.url.split("/"));
     const id = url[url.length - 1];
 
     useEffect(() => {
         const idPerson = parseInt(id);
-        PersonApi.getPeople().then((people: IPerson[]) => {
+        PersonApi.getPeople().then((people: IPerson[]) => 
+        {
+            setPerson(people.find((person: IPerson) => person.id === idPerson))
             KinshipApi.getKinships().then((kinships: IKinship[]) => {
                 return kinships.filter((kinship: IKinship) => kinship.idFirstPerson === idPerson || kinship.idSecondPerson === idPerson)
             })
@@ -42,9 +44,8 @@ const TreePage: React.FC<{}> = ({ match }: any) => {
         })
     }, [])
 
-    return (
-         
-        <TreeComponent data={relationship} />
+    return (   
+        <TreeComponent person={person} data={relationship} />
     )
 }
 

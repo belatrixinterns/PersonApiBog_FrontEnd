@@ -2,9 +2,11 @@ import React, { } from 'react';
 import Tree from 'react-d3-tree';
 import { IKinshipNames } from '../shared/IKinshipNames';
 import { any } from 'prop-types';
+import { IPerson } from '../../interfaces/IPerson';
 
 type typeData = {
-    data: Array<IKinshipNames>
+    data: Array<IKinshipNames>,
+    person: IPerson
 }
 
 const familyTree: React.FC<typeData> = (props) => {
@@ -16,29 +18,15 @@ const familyTree: React.FC<typeData> = (props) => {
     const purpleNode = { shape: 'rect', shapeProps: { width: 20, height: 20, x: -10, y: -10, fill: 'purple' } };
 
 
-    function createSquare() {
-        console.log(listRelation)
-        if (listRelation.length == 1) {
-            return listRelation[0].personOne;
-        } else if (listRelation.length > 1 && listRelation[1].personOne || listRelation[1].personTwo === listRelation[2].personOne) {
-            return listRelation[1].personOne;
-        } else if (listRelation.length > 0 && listRelation[1].personOne || listRelation[1].personTwo === listRelation[2].personTwo) {
-            return listRelation[1].personTwo;
-        } else {
-            return ("nada")
-        }
-
-    }
-
     function myTreeData() {
         return (
 
             {
-                name: createSquare(),
+                name: props.person ? (`${props.person.name} ${props.person.last_name}`) : "No hay persona",
                 nodeSvgShape: greenNode,
                 children: [
                     { name: 'Spouse', nodeSvgShape: redNode, children: [{ name: 'NAN', nodeSvgShape: blueNode }] },
-                    { name: 'Brothers/Sisters', nodeSvgShape: redNode, children: [{ name: 'NAN', nodeSvgShape: blueNode }] },
+                    { name: 'Siblings', nodeSvgShape: redNode, children: [{ name: 'NAN', nodeSvgShape: blueNode }] },
                     {
                         name: 'Parents', nodeSvgShape: redNode, children: [
                             {
