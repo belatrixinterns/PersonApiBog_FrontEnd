@@ -87,10 +87,7 @@ const familyTree: React.FC<typeData> = (props) => {
                     targetParent[1].name = kinshipName.personOne === personFullName ? `${kinshipName.personTwo}`: `${kinshipName.personOne}`;
                 }
             }
-            if(kinshipName.relation === "GrandFather" || kinshipName.relation === "GrandMother"){
-                console.log("chupelo");
-                
-            }
+           
 
         });
       return dataTree;
