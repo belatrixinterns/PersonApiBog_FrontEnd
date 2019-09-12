@@ -1,10 +1,10 @@
 import React, { } from 'react';
 import Tree from 'react-d3-tree';
-import { IKinshipNames } from '../shared/IKinshipNames';
 import { IPerson } from '../../interfaces/IPerson';
+import { IKinshipsWithParents } from '../../interfaces/IkinshipsWithParents';
 
 type typeData = {
-    listKinshipNames: Array<IKinshipNames>,
+    listKinshipNames: Array<IKinshipsWithParents>,
     person: IPerson
 }
 
@@ -22,8 +22,8 @@ const familyTree: React.FC<typeData> = (props) => {
                 name: props.person ? (`${props.person.name} ${props.person.last_name}`) : "No hay persona",
                 nodeSvgShape: greenNode,
                 children: [
-                    { name: '- Spouse', nodeSvgShape: redNode, children: [{ name: 'Unknow', nodeSvgShape: blueNode }] ,_collapsed: true},
-                    { name: '- Siblings', nodeSvgShape: redNode, children: [{ name: 'Unknow', nodeSvgShape: blueNode }] ,_collapsed: true},
+                    { name: '- Spouse', nodeSvgShape: redNode, children: [{ name: 'Unknown', nodeSvgShape: blueNode }] ,_collapsed: true},
+                    { name: '- Siblings', nodeSvgShape: redNode, children: [{ name: 'Unknown', nodeSvgShape: blueNode }] ,_collapsed: true},
                     {
                         name: '- Parents', nodeSvgShape: redNode, _collapsed: true,
                         attributes: {
@@ -33,14 +33,14 @@ const familyTree: React.FC<typeData> = (props) => {
                         },
                         children: [
                             {
-                                name: 'Unknow',
+                                name: 'Unknown',
                                 nodeSvgShape: blueNode,
-                                children: [{ name: '- grandparents', nodeSvgShape: redNode, children: [{ name: 'GrandFather', nodeSvgShape: purpleNode }, { name: 'GrandMother', nodeSvgShape: purpleNode }] }]
+                                children: [{ name: '- grandparents', nodeSvgShape: redNode, children: [{ name: 'Unknown', nodeSvgShape: purpleNode }, { name: 'Unknown', nodeSvgShape: purpleNode }] }]
                             },
                             {
-                                name: 'Unknow',
+                                name: 'Unknown',
                                 nodeSvgShape: blueNode,
-                                children: [{ name: '- grandparents', nodeSvgShape: redNode, children: [{ name: 'GrandFather', nodeSvgShape: purpleNode }, { name: 'GrandMother', nodeSvgShape: purpleNode }] }]
+                                children: [{ name: '- grandparents', nodeSvgShape: redNode, children: [{ name: 'Unknown', nodeSvgShape: purpleNode }, { name: 'Unknown', nodeSvgShape: purpleNode }] }]
                             }
                         ],
                     }
@@ -67,7 +67,7 @@ const familyTree: React.FC<typeData> = (props) => {
 
             if(kinshipName.relation === "Brother" || kinshipName.relation === "Sister" ){
                 let rootBrother: Array<any> =  dataTree.children[relationId["Siblings"]].children
-                if(rootBrother[0] && rootBrother[0].name === "Unknow"){
+                if(rootBrother[0] && rootBrother[0].name === "Unknown"){
                     rootBrother.shift();
                 }
                 rootBrother.push({
@@ -82,16 +82,52 @@ const familyTree: React.FC<typeData> = (props) => {
 
             if(kinshipName.relation === "Father" || kinshipName.relation === "Mother"){
                 let targetParent: any = dataTree.children[relationId["Parents"]].children;
-                if(kinshipName.relation === "Mother" && targetParent[0] && targetParent[0].name === "Unknow"){
-                    targetParent[0].name = kinshipName.personOne === personFullName ? `Mother: ${kinshipName.personTwo}`: `Mother: ${kinshipName.personOne}`;
+                if(kinshipName.relation === "Mother" && targetParent[0] && targetParent[0].name === "Unknown"){
+                    let mother = targetParent[0];
+                    mother.key = "Mother";
+                    mother.name = kinshipName.personOne === personFullName ? `${kinshipName.personTwo}`: `${kinshipName.personOne}`;
+
+                    let grandParents = mother.children.length > 0 ? mother.children[0]: undefined;
+                    grandParents.attributes = {
+                        "- GrandFather": '',
+                        "- GrandMother": '', 
+                    
+                    }
+                    if(grandParents){
+                        const grandFatherFromKinship: IPerson | undefined = kinshipName.grandParentsMother ? kinshipName.grandParentsMother[0]: undefined;
+                        const grandMotherFromKinship: IPerson | undefined = kinshipName.grandParentsMother ? kinshipName.grandParentsMother[1]: undefined;
+
+                        const grandFatherFullName = grandFatherFromKinship ? `${grandFatherFromKinship.name} ${grandFatherFromKinship.last_name}`: "Unknown";
+                        const grandMotherFullName = grandMotherFromKinship ?  `${grandMotherFromKinship.name} ${grandMotherFromKinship.last_name}`: "Unknown";
+                         
+                        grandParents.children[0].name =  grandFatherFullName;
+                        grandParents.children[1].name = grandMotherFullName;
+                    }
                 }
-                if(kinshipName.relation === "Father" && targetParent[1] && targetParent[1].name === "Unknow"){
-                    targetParent[1].key = "Father";
-                    targetParent[1].name = kinshipName.personOne === personFullName ? `${kinshipName.personTwo}`: `${kinshipName.personOne}`;
+                if(kinshipName.relation === "Father" && targetParent[1] && targetParent[1].name === "Unknown"){
+
+                    let father = targetParent[1];
+                    father.key = "Father";
+                    father.name = kinshipName.personOne === personFullName ? `${kinshipName.personTwo}`: `${kinshipName.personOne}`;
+
+                    let grandParents = father.children.length > 0 ? father.children[0]: undefined;
+                    grandParents.attributes = {
+                        "- GrandFather": '',
+                        "- GrandMother": '', 
+                    
+                    }
+                    if(grandParents){
+                        const grandFatherFromKinship: IPerson | undefined = kinshipName.grandParentsFather ? kinshipName.grandParentsFather[0]: undefined;
+                        const grandMotherFromKinship: IPerson | undefined = kinshipName.grandParentsFather ? kinshipName.grandParentsFather[1]: undefined;
+
+                        const grandFatherFullName = grandFatherFromKinship ? `${grandFatherFromKinship.name} ${grandFatherFromKinship.last_name}`: "Unknown";
+                        const grandMotherFullName = grandMotherFromKinship ?  `${grandMotherFromKinship.name} ${grandMotherFromKinship.last_name}`: "Unknown";
+                         
+                        grandParents.children[0].name =  grandFatherFullName;
+                        grandParents.children[1].name = grandMotherFullName;
+                    }
                 }
             }
-           
-
         });
       return dataTree;
     }

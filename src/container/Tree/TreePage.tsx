@@ -42,10 +42,11 @@ const TreePage: React.FC<{}> = ({ match }: any) => {
                         const personGrandFather = people.find( (person: IPerson) => person.id === (grandFather ? grandFather.idFirstPerson: undefined));
                        
                         const possibleGrandMother: IKinship[] | undefined= kinships ? kinships.filter((currentKinship: IKinship) => currentKinship.idSecondPerson === (father ? father.id : undefined)): undefined
-                        const grandMother: IKinship | undefined = possibleGrandMother ? possibleGrandMother.find((possibleGrandMother: IKinship) => possibleGrandMother.idRelationType === 1 ): undefined;
+                        const grandMother: IKinship | undefined = possibleGrandMother ? possibleGrandMother.find((possibleGrandMother: IKinship) => possibleGrandMother.idRelationType === 2 ): undefined;
                         const personGrandMother = people.find( (person: IPerson) => person.id === (grandMother ? grandMother.idFirstPerson: undefined));
-                      //  kins.push()
-                    
+
+                        kinshipWithNames["grandParentsFather"] = [personGrandFather, personGrandMother];
+                        
                     }
                     if (kinshipType.text === "Mother") {
                         const father: IPerson | undefined = people.find(person => person.id === (personOne ? personOne.id : undefined));
@@ -56,7 +57,8 @@ const TreePage: React.FC<{}> = ({ match }: any) => {
                         const possibleGrandMother: IKinship[] | undefined= kinships ? kinships.filter((currentKinship: IKinship) => currentKinship.idSecondPerson === (father ? father.id : undefined)): undefined
                         const grandMother: IKinship | undefined = possibleGrandMother ? possibleGrandMother.find((possibleGrandMother: IKinship) => possibleGrandMother.idRelationType === 2 ): undefined;
                         const personGrandMother = people.find( (person: IPerson) => person.id === (grandMother ? grandMother.idFirstPerson: undefined));
-                       // kins.push()
+                        
+                        kinshipWithNames["grandParentsMother"] = [personGrandFather, personGrandMother];
                         
                     }
 
