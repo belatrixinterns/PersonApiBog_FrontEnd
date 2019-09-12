@@ -101,7 +101,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
     function handleGenderChange(event: any, { name, value }: any) {
         setLocalState({ ...localState, gender: value });
     }
-    function handleNationalityChange(data: INationality) {
+    function handleNationalityChange(data: any) {
         setLocalState({ ...localState, nationality: data.value });
         
     }
