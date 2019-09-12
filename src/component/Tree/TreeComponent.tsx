@@ -87,7 +87,7 @@ const familyTree: React.FC<typeData> = (props) => {
                 if(kinshipName.relation === "Mother" && targetParent[0] && targetParent[0].name === "Unknown"){
                     let mother = targetParent[0];
                     mother.key = "Mother";
-                    mother.name = kinshipName.personOne === personFullName ? `${kinshipName.personTwo}`: `${kinshipName.personOne}`;
+                    mother.name = kinshipName.personOne === personFullName ? `Unknown`: `${kinshipName.personOne}`;
 
                     let grandParents = mother.children.length > 0 ? mother.children[0]: undefined;
                     grandParents.attributes = {
@@ -111,7 +111,7 @@ const familyTree: React.FC<typeData> = (props) => {
 
                     let father = targetParent[1];
                     father.key = "Father";
-                    father.name = kinshipName.personOne === personFullName ? `${kinshipName.personTwo}`: `${kinshipName.personOne}`;
+                    father.name = kinshipName.personOne === personFullName ? `Unknown`: `${kinshipName.personOne}`;
 
                     let grandParents = father.children.length > 0 ? father.children[0]: undefined;
                     grandParents.attributes = {
@@ -134,10 +134,10 @@ const familyTree: React.FC<typeData> = (props) => {
 
             }
 
-            if(kinshipName.relation === "Grandfather" || kinshipName.relation === "Grandmother") {
+            if((kinshipName.relation === "Grandfather" || kinshipName.relation === "Grandmother") && kinshipName.personOne !== personFullName) {
                 let targetParent: any = dataTree.children[3].children;
                 targetParent.push({
-                    name: kinshipName.personOne,
+                    name: kinshipName.personOne === personFullName ? `Unknown`: `${kinshipName.personOne}`,
                     nodeSvgShape: purpleNode
                  })
             }
