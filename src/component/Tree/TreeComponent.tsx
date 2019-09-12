@@ -19,7 +19,7 @@ const familyTree: React.FC<typeData> = (props) => {
         return (
 
             {
-                name: props.person ? (`${props.person.name} ${props.person.last_name}`) : "No hay persona",
+                name: props.person ? (`${props.person.name} ${props.person.last_name}`) : "Not found person",
                 nodeSvgShape: greenNode,
                 children: [
                     { name: '- Spouse', nodeSvgShape: redNode, children: [{ name: 'Unknown', nodeSvgShape: blueNode }] ,_collapsed: true},
@@ -43,7 +43,8 @@ const familyTree: React.FC<typeData> = (props) => {
                                 children: [{ name: '- grandparents', nodeSvgShape: redNode, children: [{ name: 'Unknown', nodeSvgShape: purpleNode }, { name: 'Unknown', nodeSvgShape: purpleNode }] }]
                             }
                         ],
-                    }
+                    },
+                    { name: '- GrandParents', nodeSvgShape: redNode, children: [] ,_collapsed: true},
                 ]
             }
         );
@@ -82,6 +83,7 @@ const familyTree: React.FC<typeData> = (props) => {
 
             if(kinshipName.relation === "Father" || kinshipName.relation === "Mother"){
                 let targetParent: any = dataTree.children[relationId["Parents"]].children;
+
                 if(kinshipName.relation === "Mother" && targetParent[0] && targetParent[0].name === "Unknown"){
                     let mother = targetParent[0];
                     mother.key = "Mother";
@@ -104,6 +106,7 @@ const familyTree: React.FC<typeData> = (props) => {
                         grandParents.children[1].name = grandMotherFullName;
                     }
                 }
+
                 if(kinshipName.relation === "Father" && targetParent[1] && targetParent[1].name === "Unknown"){
 
                     let father = targetParent[1];
@@ -127,6 +130,16 @@ const familyTree: React.FC<typeData> = (props) => {
                         grandParents.children[1].name = grandMotherFullName;
                     }
                 }
+
+
+            }
+
+            if(kinshipName.relation === "Grandfather" || kinshipName.relation === "Grandmother") {
+                let targetParent: any = dataTree.children[3].children;
+                targetParent.push({
+                    name: kinshipName.personOne,
+                    nodeSvgShape: purpleNode
+                 })
             }
         });
       return dataTree;

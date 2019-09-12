@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
 import TreeComponent from '../../component/Tree/TreeComponent';
-import { IKinshipNames } from '../../component/shared/IKinshipNames';
 import PersonApi from '../../api/personApi';
 import { IPerson } from '../../interfaces/IPerson';
 import KinshipApi from '../../api/kinshipApi';
@@ -21,7 +20,9 @@ const TreePage: React.FC<{}> = ({ match }: any) => {
         PersonApi.getPeople().then((people: IPerson[]) => {
             setPerson(people.find((person: IPerson) => person.id === idPerson))
             KinshipApi.getKinships().then((kinships: IKinship[]) => {
-                const kinshipsFiltered = kinships.filter((kinship: IKinship) => kinship.idFirstPerson === idPerson || kinship.idSecondPerson === idPerson)
+                const kinshipsFiltered = kinships.filter((kinship: IKinship) => kinship.idFirstPerson === idPerson || kinship.idSecondPerson === idPerson);
+
+                const grandParentsFiltered: IKinship[] = kinships.filter((kinship :IKinship) => kinship.idRelationType ===  5 || kinship.idRelationType === 6);
 
                 let kins: IKinshipsWithParents[] | undefined = kinshipsFiltered.map((kinshipFiltered: IKinship) => {
                     const personOne: IPerson | undefined = people.find((person: IPerson) => person.id === kinshipFiltered.idFirstPerson);
@@ -45,7 +46,20 @@ const TreePage: React.FC<{}> = ({ match }: any) => {
                         const grandMother: IKinship | undefined = possibleGrandMother ? possibleGrandMother.find((possibleGrandMother: IKinship) => possibleGrandMother.idRelationType === 2 ): undefined;
                         const personGrandMother = people.find( (person: IPerson) => person.id === (grandMother ? grandMother.idFirstPerson: undefined));
 
-                        kinshipWithNames["grandParentsFather"] = [personGrandFather, personGrandMother];
+                        const isAlreadyexistGrandParentFather = grandParentsFiltered.find((grandParentKinship: IKinship) => grandParentKinship.idFirstPerson === (personGrandFather ? personGrandFather.id: undefined));
+                        const isAlreadyexistGrandParentMother = grandParentsFiltered.find((grandParentKinship: IKinship) => grandParentKinship.idFirstPerson === (personGrandMother ? personGrandMother.id: undefined));
+                        
+                        if(isAlreadyexistGrandParentMother != undefined &&isAlreadyexistGrandParentMother && isAlreadyexistGrandParentMother ){
+                            kinshipWithNames["grandParentsFather"] = []
+                        }
+                        else if(isAlreadyexistGrandParentFather){
+                            kinshipWithNames["grandParentsFather"] = [personGrandMother]
+                        }
+                        else if(isAlreadyexistGrandParentMother){
+                            kinshipWithNames["grandParentsFather"] = [personGrandFather]
+                        }else{
+                            kinshipWithNames["grandParentsFather"] = [personGrandFather, personGrandMother];
+                        }
                         
                     }
                     if (kinshipType.text === "Mother") {
@@ -58,10 +72,22 @@ const TreePage: React.FC<{}> = ({ match }: any) => {
                         const grandMother: IKinship | undefined = possibleGrandMother ? possibleGrandMother.find((possibleGrandMother: IKinship) => possibleGrandMother.idRelationType === 2 ): undefined;
                         const personGrandMother = people.find( (person: IPerson) => person.id === (grandMother ? grandMother.idFirstPerson: undefined));
                         
-                        kinshipWithNames["grandParentsMother"] = [personGrandFather, personGrandMother];
+                        const isAlreadyexistGrandParentFather = grandParentsFiltered.find((grandParentKinship: IKinship) => grandParentKinship.idFirstPerson === (personGrandFather ? personGrandFather.id: undefined));
+                        const isAlreadyexistGrandParentMother = grandParentsFiltered.find((grandParentKinship: IKinship) => grandParentKinship.idFirstPerson === (personGrandMother ? personGrandMother.id: undefined));
+                        
+                        if(isAlreadyexistGrandParentFather != undefined && isAlreadyexistGrandParentMother && isAlreadyexistGrandParentMother ){
+                            kinshipWithNames["grandParentsMother"] = []
+                        }
+                        else if(isAlreadyexistGrandParentFather){
+                            kinshipWithNames["grandParentsMother"] = [personGrandMother]
+                        }
+                        else if(isAlreadyexistGrandParentMother){
+                            kinshipWithNames["grandParentsMother"] = [personGrandFather]
+                        }else{
+                            kinshipWithNames["grandParentsMother"] = [personGrandFather, personGrandMother];
+                        }
                         
                     }
-
 
                     return kinshipWithNames;
 
@@ -77,8 +103,6 @@ const TreePage: React.FC<{}> = ({ match }: any) => {
         <TreeComponent person={person} listKinshipNames={relationship} />
     )
 }
-
-
 
 
 export default TreePage;
