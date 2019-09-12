@@ -74,6 +74,9 @@ const familyTree: React.FC<typeData> = (props) => {
                     name: kinshipName.personOne === personFullName ? kinshipName.personTwo: kinshipName.personOne,
                     id: kinshipName.id,
                     nodeSvgShape: blueNode,
+
+
+                    
                 })
             }
 
