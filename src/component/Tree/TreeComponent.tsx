@@ -144,7 +144,7 @@ const familyTree: React.FC<typeData> = (props) => {
         });
       return dataTree;
     }
-    const translate = {x: 200 / 2, y: 700 / 2};
+    const translate = {x: 200 / 2, y: 500 / 2};
     return (
         <Tree data={loadPersonRelations()}
             translate= {translate}

@@ -60,6 +60,17 @@
     color: $info;
   }
 
+  .ui.button.tree_button{
+    background-color: $success;
+    color: white;
+    border: solid 2px $success;
+  }
+
+  .ui.button.tree_button:hover{
+    background-color:white;
+    color: $success;
+  }
+
   .ui.button.delete_button{
     background-color: $danger;
     color: white;
