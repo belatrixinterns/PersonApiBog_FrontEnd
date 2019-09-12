@@ -344,11 +344,19 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                 }
                 {
                     match.url.includes("/person/inspect") ?  
-                        (<Link to={`/person/update/${id}`} replace >
+                        (<div>
+                            <Link to={`/person/update/${id}`} replace >
                             <Button className="submit_button update_button" type="button" floated='right'>
                                 <i className="icon settings" /> Modify
                             </Button>
-                        </Link>) :  ""
+                        </Link>
+                        <Link to={`/Tree/TreeComponent/${id}`}  >
+                            <Button className="submit_button tree_button" type="button" floated='right'>
+                                <i className="icon tree" /> Family Tree
+                            </Button>
+                        </Link>
+                        </div> 
+                        ) :  ""
                 }
                 
                 <Table key={"table_form"} basic='very'>

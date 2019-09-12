@@ -125,6 +125,21 @@ const ListPersonComponent: React.FC<IListPersonProps> = (props) => {
                 {Messages.TOOLTIP_GO_INSPECT_PERSONS_KINSHIPS}
               </ReactTooltip>
             </Link>
+
+            <Link to={`Tree/TreeComponent/${person.id}`}>
+              <Button
+
+                className="circular ui icon button"
+                color="green"
+                data-tip=""
+                data-for="react-toooltip-inspect-person"
+              >
+                <i className="icon tree"></i>
+              </Button>
+              <ReactTooltip id="react-toooltip-inspect-person" type="dark" place="right">
+                {Messages.TOOLTIP_GO_INSPECT_PERSON}
+              </ReactTooltip>
+            </Link>
           </div >
 
         )
