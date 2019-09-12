@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 import KinshipFormPage from '../../container/KinshipFormPage/KinshipFormPage';
 import ListKinshipPage from '../../container/ListKinship/ListkinshipPage';
 import InspectKindship from '../../container/ListKinship/InspectKindshipPage';
+import TreePage from '../../container/Tree/TreePage';
 
 const App: React.FC = () => {
   return (
@@ -36,7 +37,8 @@ const App: React.FC = () => {
                 <Route path="/kinship/create" exact component={KinshipFormPage} />
                 <Route path="/kinship/update/:id" exact component={KinshipFormPage} />
                 <Route path="/person/inspect/kinships/:id" exact component={InspectKindship} />
-                <Route component={NotFound} />
+                <Route path="/Tree/TreeComponent/:id" exact component={TreePage}/>
+                <Route class component={NotFound} />
               </Switch>
             </Grid.Column>
           </Grid.Row>

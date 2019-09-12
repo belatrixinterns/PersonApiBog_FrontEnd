@@ -39,9 +39,9 @@ const KinshipForm: FunctionComponent = ({ match }: any) => {
 
     const getFormCreateContent = () => {
         return ([
-            { name: "Person 1:", input: <Select id="personO" fluid search placeholder='Person 1' className="input-form" value={localState.personOne} options={listState.peopleList} onChange={handlePersonOneChange} /> },
-            { name: "Relation:", input: <Select id="kinship" fluid placeholder='Kinship' className="input-form" options={genderState.gender === '' ? listKinshipType : (genderState.gender === '1' ? listState.kinshipListMale : listState.kinshipListFemale)} type="text" value={localState.kinship} onChange={handleKinshipChange} /> },
-            { name: "Person 2:", input: <Select id="personT" fluid search placeholder='Person 2' className="input-form" value={localState.personTwo} options={listState.peopleList} onChange={handlePersonTwoChange} /> },
+            { name: "Person 1:*", input: <Select id="personO" fluid search placeholder='Person 1' className="input-form" value={localState.personOne} options={listState.peopleList} onChange={handlePersonOneChange} /> },
+            { name: "Relation:*", input: <Select id="kinship" fluid placeholder='Kinship' className="input-form" options={genderState.gender === '' ? listKinshipType : (genderState.gender === '1' ? listState.kinshipListMale : listState.kinshipListFemale)} type="text" value={localState.kinship} onChange={handleKinshipChange} /> },
+            { name: "Person 2:*", input: <Select id="personT" fluid search placeholder='Person 2' className="input-form" value={localState.personTwo} options={listState.peopleList} onChange={handlePersonTwoChange} /> },
         ])
     };
 
