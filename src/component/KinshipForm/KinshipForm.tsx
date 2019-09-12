@@ -28,12 +28,14 @@ const KinshipForm: FunctionComponent = ({ match }: any) => {
 
     const [updateConfirmState, setUpdateConfirmState] = useState(false);
 
+    const [goBackConfirmState, setGoBackConfirmState] = useState(false);
+
     function getGender(key: any) {
         let gender: any = listState.peopleList.filter((element: any) => element.key === key);
         if (gender.length > 0) {
             setGenderState({ ...genderState, gender: gender[0].gender });
         }
-    };
+    }
 
     const getFormCreateContent = () => {
         return ([
@@ -65,14 +67,14 @@ const KinshipForm: FunctionComponent = ({ match }: any) => {
                     const id = url[url.length - 1];
 
                     if (isNaN(id)) {
-                        toast.info("Id not valid");
-                        history.push("/kinships");
-                        history.go(0);
+                        toast.error("Invalid id");
+                        history.push("/kinships"); history.push("/kinships");
+                        history.go(-1);
                     }
                     else {
                         KinshipApi.getKinship(id).then((data: IKinship) => {
                             setLocalState({ ...localState, "personOne": (data.idFirstPerson).toString(), "personTwo": (data.idSecondPerson).toString(), "kinship": (data.idRelationType).toString(), })
-                            const personSearched = response.find(person => person.id == data.idFirstPerson);
+                            const personSearched = response.find(person => person.id === data.idFirstPerson);
 
                         if(personSearched){
                             setGenderState({gender: personSearched.gender.toString()})
@@ -80,14 +82,14 @@ const KinshipForm: FunctionComponent = ({ match }: any) => {
                     })
                     .catch((err:any) => {
                         if (err.response && err.response.data.message){
-                            history.push("/kinships");
-                            history.go(0);
                             toast.error(err.response.data.message);
+                            history.push("/kinships"); history.push("/kinships");
+                            history.go(-1);
                         }
                         else{
-                            history.push("/kinships");
-                            history.go(0);
                             toast.error("Error on charge kinship");
+                            history.push("/kinships"); history.push("/kinships");
+                            history.go(-1);
                         }
                     });
                 }  
@@ -105,6 +107,16 @@ const KinshipForm: FunctionComponent = ({ match }: any) => {
             });
         }
     }
+
+    function goBack(event: any) {
+        event.preventDefault();
+        history.goBack();
+    }
+
+    function handleCancelGoBackPerson(){
+        setGoBackConfirmState(false);
+    }
+
     function handlePersonOneChange(event: any, { name, value }: any) {
         if (localState.personTwo && value === localState.personTwo) {
             toast.error(MESSAGES.CANT_SELECT_SAME_PERSON)
@@ -199,11 +211,12 @@ const KinshipForm: FunctionComponent = ({ match }: any) => {
             printTableForm()
         );
     }
+    
 
     const kinshipToComponent = () => {
-        const personOne: IPersonOnUpdate | undefined = listState.peopleList.find((person: IPersonOnUpdate) => person.key == localState.personOne);
-        const personTwo: IPersonOnUpdate | undefined = listState.peopleList.find((person: IPersonOnUpdate) => person.key == localState.personTwo);
-        const kinshipType: IKinshipType | undefined = listKinshipType.find(kinshipType => kinshipType.key == localState.kinship);
+        const personOne: IPersonOnUpdate | undefined = listState.peopleList.find((person: IPersonOnUpdate) => person.key === localState.personOne);
+        const personTwo: IPersonOnUpdate | undefined = listState.peopleList.find((person: IPersonOnUpdate) => person.key === localState.personTwo);
+        const kinshipType: IKinshipType | undefined = listKinshipType.find(kinshipType => kinshipType.key === localState.kinship);
 
         return (<div className="confirmation-component">
             <Grid>
@@ -229,6 +242,12 @@ const KinshipForm: FunctionComponent = ({ match }: any) => {
                 </GridRow>
             </Grid>
         </div>);
+    }
+
+    function validateRequiredFields(){
+        const kinshipValues = Object.values(localState);
+        const isValidKinshipForm = kinshipValues.every((kinshipEntryValue) => kinshipEntryValue !== "");
+        return isValidKinshipForm;
     }
 
 
@@ -259,10 +278,11 @@ const KinshipForm: FunctionComponent = ({ match }: any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/kinship/create" ? <CreateButtonsForm isPersonForm={false} handleSubmit={handleSubmit} /> : (match.url.includes("/kinship/update") ? <UpdateButtonsForm isPersonForm={false} updateButtonHandler={() => setUpdateConfirmState(true)} /> : inspectButtons())
-                }
+                    match.url === "/kinship/create" ? <CreateButtonsForm disabled={validateRequiredFields()} isPersonForm={false} handleSubmit={handleSubmit} /> : (match.url.includes("/kinship/update") ? <UpdateButtonsForm disabled={validateRequiredFields()} isPersonForm={false} updateButtonHandler={() => setUpdateConfirmState(true)} goBackButtonHandler={() => setGoBackConfirmState(true)}/> : inspectButtons())
+                }  
             </form>
             <ConfirmComponent confirmMessageContent={kinshipToComponent()} confirmOpenState={updateConfirmState} functionToExecuteOnConfirm={updateRelationOnConfirm} handleCancelEvent={handleCancelUpdateRelation}></ConfirmComponent>
+            <ConfirmComponent confirmMessageContent={"¿Desea salir sin completar los cambios?"} confirmOpenState={goBackConfirmState} functionToExecuteOnConfirm={goBack} handleCancelEvent={handleCancelGoBackPerson}></ConfirmComponent>
         </div>
     );
 

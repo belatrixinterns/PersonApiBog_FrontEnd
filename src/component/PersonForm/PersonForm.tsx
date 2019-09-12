@@ -1,19 +1,20 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import {Input, Table, Button, Select, Confirm, Grid, GridRow, GridColumn, List, ListItem} from 'semantic-ui-react';
+import {Input, Table, Button, Select, Confirm, Grid, GridRow, GridColumn, List, ListItem, Dropdown} from 'semantic-ui-react';
 import {DateInput} from 'semantic-ui-calendar-react';
 import { createBrowserHistory } from 'history';
 import { toast } from 'react-toastify';
 import PersonApi from '../../api/personApi';
 import { IPerson } from '../../interfaces/IPerson';
-import contactValidation from '../shared/contactValidation';
-import nameValidation from '../shared/nameValidation';
-import documentValidation from '../shared/documentValidation';
 import { Link } from 'react-router-dom';
 import GoBackButton from '../shared/GoBackButton';
 import MESSAGES from '../shared/Messages';
 import UpdateButtonsForm from '../shared/updateButtonsForm';
 import CreateButtonsForm from '../shared/createButtonsForm';
 import ConfirmComponent from '../shared/ConfirmComponent';
+import validatePersonFields from '../shared/Validators/PersonValidator/PersonValidator';
+import AsyncPaginate from "react-select-async-paginate";
+import { INationality } from '../shared/INationality';
+
 
 const PersonForm: FunctionComponent = ({match}:any) => {
     const [localState, setLocalState] = useState({name: '',lastName: '',documentType: '',document: '', dateOfBirth: "",gender: '',nationality: '',contact: ''});
@@ -23,13 +24,40 @@ const PersonForm: FunctionComponent = ({match}:any) => {
     const url = (match.url.split("/"));
     const id = url[url.length - 1];
 
-    const [listState, setListState] = useState({nationalityList:[{}], 
+    const [listState, setListState] = useState({nationalityList: Array<INationality>(), 
         genderList: [{key:'0', value:'0', text:'Female'}, {key:'1', value:'1', text:'Male'}],
         documentTypeList: [{key:'1', value:'CC', text:'CC',}, {key:'2', value:'CE', text:'CE'}, {key:'3', value:'TI', text:'TI'}]});
 
     const [confirmOpen, setConfirmOpen] = useState({confirmState:false});
-    const [updateConfirmState, setUpdateConfirmState] = useState(false);
 
+    const [updateConfirmState, setUpdateConfirmState] = useState(false);
+  
+    const [goBackConfirmState, setGoBackConfirmState] = useState(false);
+
+
+    const loadOptions = async (search: any, prevOptions: INationality[]) => {
+      
+        let filteredOptions;
+        if (!search) {
+          filteredOptions = listState.nationalityList;
+        } else {
+          const searchLower = search.toLowerCase();
+      
+          filteredOptions = listState.nationalityList.filter( (nationality: INationality) => nationality.text.toLowerCase().includes(searchLower));
+        }
+      
+        const hasMore = filteredOptions.length > prevOptions.length + 10;
+        const slicedOptions = filteredOptions.slice(
+          prevOptions.length,
+          prevOptions.length + 10
+        );
+      
+        return {
+          options: slicedOptions,
+          hasMore
+        };
+      };
+    
     const getFormCreateContent= () =>{ return([
         {name: "Name:", input: <Input key="name" fluid required maxLength="25" placeholder='Name' className="input-form" type="text" value={localState.name} onChange={handleNameChange} />},
         {name: "Last Name:", input: <Input key="lantName" fluid required maxLength="25" placeholder='Last Name' className="input-form" type="text" value={localState.lastName} onChange={handleLastNameChange} />},
@@ -37,8 +65,9 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         {name: "Document:", input:<Input key="document" required fluid placeholder='Document' maxLength={localState.documentType === "CE"? 20:10} className="input-form" type="text" value={localState.document} onChange={handleDocumentChange} />},
         {name: "Date of Birth:", input: datePicker()},
         {name: "Gender:", input: <Select key="gender" fluid placeholder='Gender' className="input-form" options={listState.genderList} type="text" value={localState.gender} onChange={handleGenderChange} />},
-        {name: "Nationality", input: <Select key="nationality" fluid search placeholder='Nationality' value={localState.nationality} className="input-form" options={listState.nationalityList} onChange={handleNationalityChange} />},
-        {name: "Contact:", input:<Input key="contact" required fluid maxLength="30" placeholder='Contact' className="input-form" type="text" value={localState.contact} onChange={handleContactChange} />},
+        {name: "Nationality", input: <AsyncPaginate placeholder="Nationality" value={listState.nationalityList.find((nationality: INationality) => nationality.value === localState.nationality)} loadOptions={loadOptions} onChange={handleNationalityChange} />},
+        {name: "Contact:", input:<Input key="contact" fluid maxLength="30" placeholder='Contact' className="input-form" type="text" value={localState.contact} onChange={handleContactChange} />},
+
     ])};
 
     useEffect(() => {
@@ -46,11 +75,12 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         inspect();
     },[])
     
+    
     function chargeCountries(){
         fetch('https://restcountries.eu/rest/v2/all?fields=name;numericCode')
         .then(response => response.json())
         .then(json => setListState({...listState, "nationalityList":(json.map((value:any) => {
-            return {"text": value.name, "value": (value.numericCode + ""), "key": (value.numericCode + "")}
+            return {"text": value.name, "value": (value.numericCode + ""), "key": (value.numericCode + ""), "label" : value.name}
          }))}));
     }
 
@@ -72,11 +102,21 @@ const PersonForm: FunctionComponent = ({match}:any) => {
     function handleGenderChange(event: any, { name, value }: any) {
         setLocalState({ ...localState, gender: value });
     }
-    function handleNationalityChange(event: any, { name, value }: any) {
-        setLocalState({ ...localState, nationality: value });
+    function handleNationalityChange(data: INationality) {
+        setLocalState({ ...localState, nationality: data.value });
+        
     }
     function handleContactChange (event:any, {name, value}:any) {
         setLocalState({...localState,contact: value});
+    }
+
+    function goBack(event: any) {
+        event.preventDefault();
+        history.goBack();
+    }
+
+    function handleCancelGoBackPerson(){
+        setGoBackConfirmState(false);
     }
 
     function handleCreateButton(event: any) {
@@ -87,31 +127,17 @@ const PersonForm: FunctionComponent = ({match}:any) => {
             localState.documentType + '","document_id":"'+ localState.document +'","gender":"'+ localState.gender+ '","nationality":"'+ localState.nationality + 
             '","contact":"'+ localState.contact +'"}');
 
-        var validation:{mssg:string, request:boolean} = contactValidation(newPerson.contact);
-        if(!validation.request && validation.mssg){
-            toast.error(validation.mssg);
-            return;
+        if(validatePersonFields(localState)){
+            PersonApi.createPerson(newPerson)
+            .then(()=>{
+                history.goBack();
+                toast.info("Person created succesfully");
+            })
+            .catch( err => {
+                if(err.response.data.message)
+                toast.error(err.response.data.message);
+            });
         }
-        validation = nameValidation(newPerson.name, newPerson.last_name);
-        if(!validation.request && validation.mssg){
-            toast.error(validation.mssg);
-            return;
-        }
-        validation = documentValidation(newPerson.document_id, newPerson.document_type);
-        if(!validation.request && validation.mssg){
-            toast.error(validation.mssg);
-            return;
-        }
-
-        PersonApi.createPerson(newPerson)
-        .then(()=>{
- 
-            toast.info("Person created succesfully");
-        })
-        .catch( err => {
-            if(err.response.data.message)
-            toast.error(err.response.data.message);
-        });
     }
 
     function datePicker(){
@@ -142,9 +168,9 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         if(!match.url.includes("/person/create")){
 
             if(isNaN(id)){
-                toast.info("Id not valid");
-                history.push("/persons");
-                history.go(0);
+                toast.error("Invalid Id");
+                history.push("/persons"); history.push("/persons");
+                history.go(-1);
             }
             else{
                 PersonApi.getPerson(id)
@@ -158,18 +184,17 @@ const PersonForm: FunctionComponent = ({match}:any) => {
 
                     setLocalState({...localState, "name": data.name, "lastName": data.last_name, "documentType": data.document_type, "document": data.document_id, 
                         "dateOfBirth": formatDate, "gender": data.gender, "nationality": data.nationality, "contact": data.contact});
-                    }
-                )
+                    }                )
                 .catch((err:any) => {
                     if (err.response && err.response.data.message){
-                        history.push("/persons");
-                        history.go(0);
                         toast.error(err.response.data.message);
+                        history.push("/persons"); history.push("/persons");
+                        history.go(-1);
                     }
                     else{
-                        history.push("/persons");
-                        history.go(0);
                         toast.error("Error on charge person");
+                        history.push("/persons"); history.push("/persons");
+                        history.go(-1);
                     }
                 });
 
@@ -191,39 +216,26 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         const newPerson:IPerson = JSON.parse('{"id":"'+ id + '", "name":"' + localState.name + '","last_name":"'  + localState.lastName + '","date_of_birth":"'+ formatDate + '","document_type":"'+
             localState.documentType + '","document_id":"'+ localState.document +'","gender":"'+ localState.gender+ '","nationality":"'+ localState.nationality + 
             '","contact":"'+ localState.contact +'"}');
-            var validation:{mssg:string, request:boolean} = contactValidation(newPerson.contact);
-
-        if(!validation.request && validation.mssg){
-            toast.error(validation.mssg);
-            return;
-        }
-        validation = nameValidation(newPerson.name, newPerson.last_name);
-        if(!validation.request && validation.mssg){
-            toast.error(validation.mssg);
-            return;
-        }
-        validation = documentValidation(newPerson.document_id, newPerson.document_type);
-        if(!validation.request && validation.mssg){
-            toast.error(validation.mssg);
-            return;
-        }
-        PersonApi.updatePerson(newPerson)
-        .then(()=>{
-            history.goBack();
-            toast.info("Person updated succesfully");
-        })
-        .catch( (err:any) => {
-            if (err.response && err.response.data.message){
-                toast.error(err.response.data.message);
-                history.push("/persons");
-                history.go(0);
-            }
-            else{
-                toast.error("Error on charge person");
-                history.push("/persons");
-                history.go(0);
-            }
-        });
+        
+          if(validatePersonFields(localState)){
+              PersonApi.updatePerson(newPerson)
+              .then(()=>{
+                  history.goBack();
+                  toast.info("Person updated succesfully");
+              })
+              .catch( (err:any) => {
+                  if (err.response && err.response.data.message){
+                     toast.error(err.response.data.message);
+                     history.push("/persons"); history.push("/persons");
+                     history.go(-1);  
+                  }
+                  else{
+                      toast.error("Error on charge person");
+                      history.push("/persons"); history.push("/persons");
+                      history.go(-1);
+                  }
+              });
+          }
     }
 
     function updatePersonOnConfirm(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>){
@@ -236,8 +248,16 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         setUpdateConfirmState(false);
     }
 
+    const goBackToComponent = () => {
+        return(
+            <div className="confirmation-component">
+                <p className="confirmation-text">¿Desea salir sin completar los cambios?</p>
+            </div>
+        );
+    }
+
     const personToComponent = () =>{
-        const currentNationality: any = listState.nationalityList.find((nationality:any ) => nationality.value == localState.nationality);
+        const currentNationality: any = listState.nationalityList.find((nationality:any ) => nationality.value === localState.nationality);
         return(<div className="confirmation-component">
             <Grid>
                 <GridRow>
@@ -261,7 +281,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                                 <b>Document: </b> {localState.document}
                             </ListItem>
                             <ListItem>
-                                <b>Gender: </b> {localState.gender == "1" ? "Male": "Female"}
+                                <b>Gender: </b> {localState.gender === "1" ? "Male": "Female"}
                             </ListItem>
                             <ListItem>
                                 <b>Date of birth: </b> {localState.dateOfBirth}
@@ -288,6 +308,12 @@ const PersonForm: FunctionComponent = ({match}:any) => {
         setStateShowConfirmComponent(true);
     }
 
+    function validateRequiredFields(){
+        const personEntries = Object.entries(localState);
+        const isValidPersonForm = personEntries.every(([personEntryKey, personEntryValue]) => personEntryValue !== "" || personEntryKey == "contact");
+        return isValidPersonForm;
+    }
+
     function inspectButtons(){
         return(
             <div>
@@ -306,7 +332,7 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                  <Button className="submit_button delete_button" type="button" onClick={deleteButtonHandler} floated='right'>
                     <i className="icon trash" /> Delete
                 </Button>
-                <GoBackButton/>
+                <GoBackButton />
             </div>
         );
     }
@@ -334,11 +360,12 @@ const PersonForm: FunctionComponent = ({match}:any) => {
                     </Table.Body>
                 </Table>
                 {
-                    match.url === "/person/create" ?  <CreateButtonsForm  isPersonForm={true} handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm isPersonForm={true} updateButtonHandler={() => setUpdateConfirmState(true)}/>  : inspectButtons() )
+                    match.url === "/person/create" ?  <CreateButtonsForm disabled={!validateRequiredFields()} isPersonForm={true} handleSubmit={handleCreateButton}/>  : (match.url.includes("/person/update") ?  <UpdateButtonsForm disabled={!validateRequiredFields()} isPersonForm={true} updateButtonHandler={() => setUpdateConfirmState(true)} goBackButtonHandler={() => setGoBackConfirmState(true)}/>  : inspectButtons() )
                 }
             </form>
             <ConfirmComponent confirmMessageContent={personToComponent()} confirmOpenState={updateConfirmState} functionToExecuteOnConfirm={updatePersonOnConfirm} handleCancelEvent={handleCancelUpdatePerson}></ConfirmComponent>
-        </div>
+            <ConfirmComponent confirmMessageContent={goBackToComponent()} confirmOpenState={goBackConfirmState} functionToExecuteOnConfirm={goBack} handleCancelEvent={handleCancelGoBackPerson}></ConfirmComponent>
+        </div>    
     );
 }
 
