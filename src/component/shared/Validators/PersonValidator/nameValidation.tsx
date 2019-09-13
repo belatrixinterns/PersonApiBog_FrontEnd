@@ -7,10 +7,10 @@ class nameValidation extends PersonValidation {
     validateField(){
         const name = this.person.name;
         const lastName = this.person.lastName;
+        const charactersAllowed = "a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ'";
 
-        let numericPattern =  new RegExp("^\\S+[a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ ]+$");
+        let numericPattern =  new RegExp(`^[${charactersAllowed}]+( [${charactersAllowed}]+)*$`);
         if((!numericPattern.test(name) || !numericPattern.test(lastName)) || (name.length < 3 || lastName.length < 3)){
-            console.log(numericPattern.test(name))
             return {mssg:MESSAGES.NAME_INVALID_FORMAT, request:false};              
         }
         
