@@ -2,8 +2,18 @@
     height: 100%;
     padding: 0 2%;
 }
-.Family_tree button{
+.Family_tree .go_back_button{
     position: absolute;
     bottom: 4%;
     left: 2%;
+}
+
+.Family_tree .redirect_create_button{
+    position: absolute!important;
+    top: 2%;
+    right: 2rem;
+}
+
+.Family_tree .create_person_button{
+    right: 15rem;
 }

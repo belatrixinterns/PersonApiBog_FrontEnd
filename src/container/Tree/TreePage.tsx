@@ -7,6 +7,8 @@ import { IKinship } from '../../interfaces/IKinship';
 import { listKinshipType } from '../../component/shared/listKinshipType';
 import { IKinshipsWithParents } from '../../interfaces/IkinshipsWithParents';
 import GoBackButton from '../../component/shared/GoBackButton';
+import CreateKinshipButton from '../../component/shared/CreateKinshipButton';
+import CreatePersonButton from '../../component/shared/CreatePersonButton';
 
 
 const TreePage: React.FC<{}> = ({ match }: any) => {
@@ -104,7 +106,7 @@ const TreePage: React.FC<{}> = ({ match }: any) => {
         <div className="Family_tree">
             <h2>Family Tree</h2>
             <TreeComponent person={person} listKinshipNames={relationship} />
-            <GoBackButton />        
+            <GoBackButton />  < CreateKinshipButton/>  <CreatePersonButton/>   
         </div>
     )
 }

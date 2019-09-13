@@ -9,7 +9,7 @@ const CreatePersonButton = () => {
         <div>
             <Link to="/person/create">
                 <Button
-                    className="redirect_create_button"
+                    className="redirect_create_button create_person_button"
                     color="green"
                     content="Create person"
                     icon="add"

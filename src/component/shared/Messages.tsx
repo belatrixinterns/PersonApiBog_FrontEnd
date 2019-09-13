@@ -30,7 +30,8 @@ const MESSAGES = {
     TOOLTIP_GO_TO_UPDATE_kINSHIP: "Through this Button you can go to the UPDATE KINSHIP  form.",
     TOOLTIP_ADD_KINSHIP:"Add new  kinship.",
     TOOLTIP_ADD_PERSON:"Add new person.",
-    TOOLTIP_GO_INSPECT_PERSONS_KINSHIPS: "Through this Button you can go to see the Person's kinships."
+    TOOLTIP_GO_INSPECT_PERSONS_KINSHIPS: "Through this Button you can go to see the Person's kinships.",
+    TOOLTIP_GO_FAMILY_TREE: "Through this Button you can go to see the Person's family tree.",
     
 }
 

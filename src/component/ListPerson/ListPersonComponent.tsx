@@ -137,7 +137,7 @@ const ListPersonComponent: React.FC<IListPersonProps> = (props) => {
                 <i className="icon tree"></i>
               </Button>
               <ReactTooltip id="react-toooltip-inspect-person" type="dark" place="right">
-                {Messages.TOOLTIP_GO_INSPECT_PERSON}
+                {Messages.TOOLTIP_GO_FAMILY_TREE}
               </ReactTooltip>
             </Link>
           </div >
